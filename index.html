@@ -34,7 +34,6 @@
         
         h1, h2, h3, h4 {
             font-family: var(--font-heading);
-            margin-bottom: 1rem;
         }
         
         .container {
@@ -119,54 +118,13 @@
             background-size: cover;
             background-position: center;
             color: white;
-            padding: 100px 0;
+            padding: 80px 0;
             text-align: center;
         }
         
         .hero h2 {
             font-size: 2.5rem;
             margin-bottom: 20px;
-        }
-        
-        /* ===== LOADING STATES ===== */
-        .loading-spinner {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 3rem;
-            color: var(--primary);
-        }
-        
-        .loading-spinner i {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            animation: spin 1s linear infinite;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        /* ===== ERROR STATES ===== */
-        .error-message {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 2rem;
-            background: #fff8f8;
-            border: 1px solid var(--secondary);
-            border-radius: 8px;
-            margin: 1rem 0;
-        }
-        
-        .error-message p:first-child {
-            color: var(--secondary);
-            font-weight: bold;
-            font-size: 1.2rem;
-        }
-        
-        .error-message small {
-            color: var(--text-light);
-            font-size: 0.8rem;
         }
         
         /* ===== NEWS GRID ===== */
@@ -229,7 +187,6 @@
         .news-title {
             font-size: 1.2rem;
             margin-bottom: 10px;
-            color: var(--dark);
         }
         
         .news-date {
@@ -405,11 +362,177 @@
             font-size: 0.9rem;
         }
         
+        /* ===== ABOUT/CONTACT PAGES ===== */
+        .page-content {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .contact-form .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .contact-form label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .contact-form input,
+        .contact-form textarea {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+        
+        .contact-form textarea {
+            min-height: 150px;
+        }
+        
+        /* ===== AUTH STYLES ===== */
+        .auth-section {
+            position: relative;
+        }
+        
+        .user-dropdown {
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 15px;
+            width: 200px;
+            display: none;
+        }
+        
+        .user-dropdown.show {
+            display: block;
+        }
+        
+        /* ===== LOGIN MODAL ===== */
+        .login-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .login-modal.show {
+            display: flex;
+        }
+        
+        .login-form {
+            background: white;
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+        }
+        
+        .login-form h2 {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+        
+        .form-actions {
+            margin-top: 30px;
+            text-align: center;
+        }
+        
+        /* ===== DASHBOARD ===== */
+        .dashboard {
+            display: none;
+            padding: 30px 0;
+        }
+        
+        .dashboard-form {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .dashboard-form h2 {
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .form-row {
+            display: flex;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .form-row .form-group {
+            flex: 1;
+        }
+        
+        textarea {
+            width: 100%;
+            min-height: 200px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+        
+        .image-upload {
+            margin-bottom: 20px;
+        }
+        
+        .image-preview {
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .image-preview.show {
+            display: block;
+        }
+        
+        .image-preview img {
+            max-width: 100%;
+            max-height: 300px;
+            border-radius: 4px;
+        }
+        
         /* ===== FOOTER ===== */
         footer {
             background: var(--dark);
             color: white;
-            padding: 40px 0;
+            padding: 30px 0;
             margin-top: 50px;
         }
         
@@ -420,9 +543,8 @@
         }
         
         .footer-column h3 {
-            color: var(--primary);
             margin-bottom: 15px;
-            font-size: 1.1rem;
+            color: var(--primary);
         }
         
         .footer-column ul {
@@ -430,13 +552,13 @@
         }
         
         .footer-column ul li {
-            margin-bottom: 8px;
+            margin-bottom: 10px;
         }
         
         .footer-column ul li a {
             color: #ddd;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: all 0.3s ease;
         }
         
         .footer-column ul li a:hover {
@@ -448,8 +570,6 @@
             margin-top: 30px;
             padding-top: 20px;
             border-top: 1px solid rgba(255,255,255,0.1);
-            font-size: 0.9rem;
-            color: #aaa;
         }
         
         /* ===== RESPONSIVE ===== */
@@ -463,12 +583,9 @@
                 flex-direction: column;
             }
             
-            .hero {
-                padding: 60px 0;
-            }
-            
-            .hero h2 {
-                font-size: 2rem;
+            .form-row {
+                flex-direction: column;
+                gap: 0;
             }
             
             .weather-details {
@@ -478,355 +595,459 @@
             .article-image {
                 height: 250px;
             }
-            
-            .event-card {
-                flex-direction: column;
-            }
-            
-            .event-date {
-                margin-right: 0;
-                margin-bottom: 15px;
-                max-width: 70px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER SECTION -->
+    <!-- HEADER -->
     <header>
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <h1>KAUS News</h1>
-                    <p>Caribbean News Network</p>
-                </div>
-                <div class="auth-section">
-                    <a href="#" id="loginBtn" class="btn btn-primary">Login</a>
-                    <div id="userDropdown" class="user-dropdown">
-                        <p>Logged in as <span id="userEmail"></span></p>
-                        <a href="#" id="logoutBtn" class="btn btn-primary">Logout</a>
+        <div class="container header-content">
+            <div class="logo">
+                <h1>KAUS NEWS</h1>
+                <p>Caribbean News Network</p>
+            </div>
+            
+            <div class="auth-section">
+                <button id="loginBtn" class="btn btn-primary">
+                    <i class="fas fa-user"></i> Reporter Login
+                </button>
+                
+                <div id="userDropdown" class="user-dropdown">
+                    <div class="user-info">
+                        <span id="userEmail"></span>
+                        <button id="logoutBtn" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
+                            Logout
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
     </header>
-
+    
     <!-- NAVIGATION -->
     <nav>
         <div class="container">
             <ul class="nav-links">
                 <li><a href="#" data-section="home">Home</a></li>
-                <li><a href="#" data-section="weather">Weather</a></li>
-                <li><a href="#" data-section="events">Events</a></li>
                 <li><a href="#" data-section="about">About</a></li>
                 <li><a href="#" data-section="contact">Contact</a></li>
+                <li><a href="#" data-section="weather">Weather</a></li>
+                <li><a href="#" data-section="events">Events</a></li>
             </ul>
         </div>
     </nav>
-
-    <!-- MAIN CONTENT -->
-    <main class="container">
-        <!-- HERO SECTION -->
-        <section class="hero">
-            <div class="container">
-                <h2>Latest Caribbean News & Updates</h2>
-                <p>Stay informed with real-time news from across the islands</p>
-            </div>
-        </section>
-
+    
+    <!-- MAIN CONTENT AREA -->
+    <div id="content-area">
         <!-- HOME SECTION -->
         <section id="home-section">
-            <h2>Top Stories</h2>
-            <div id="newsFeed" class="news-grid">
-                <div class="loading-spinner">
-                    <i class="fas fa-spinner"></i>
-                    <p>Loading news feed...</p>
+            <!-- HERO SECTION -->
+            <div class="hero">
+                <div class="container">
+                    <h2>Your Source for Caribbean News</h2>
+                    <p>Covering St. Kitts, Nevis, and the entire Caribbean region</p>
                 </div>
             </div>
             
-            <div id="dashboard" style="display: none;">
-                <h2>Your Reporter Dashboard</h2>
-                <div id="reporterNewsFeed" class="news-grid"></div>
-                
-                <form id="articleForm" class="dashboard-form">
-                    <h2>Submit New Article</h2>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="articleTitle">Title</label>
-                            <input type="text" id="articleTitle" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="articleAuthor">Your Name</label>
-                            <input type="text" id="articleAuthor" required>
-                        </div>
+            <div class="container">
+                <!-- NEWS SECTION -->
+                <section id="news">
+                    <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                    <div class="news-grid" id="newsFeed">
+                        <!-- News articles will load here -->
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="articleExcerpt">Short Description</label>
-                        <input type="text" id="articleExcerpt" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="articleContent">Full Content</label>
-                        <textarea id="articleContent" required></textarea>
-                    </div>
-                    
-                    <div class="image-upload">
-                        <label for="articleImage">Featured Image</label>
-                        <input type="file" id="articleImage" accept="image/*">
-                        <div id="imagePreview" class="image-preview">
-                            <img id="previewImage" src="#" alt="Preview">
-                        </div>
-                    </div>
-                    
-                    <div class="form-actions">
-                        <button type="submit" class="btn btn-primary">Publish Article</button>
-                    </div>
-                </form>
+                </section>
             </div>
         </section>
-
+        
         <!-- ARTICLE DETAIL SECTION -->
-        <section id="article-section" style="display: none;">
-            <div id="articleDetail" class="article-detail"></div>
+        <section id="article-section" class="container" style="display:none;">
+            <div class="article-detail" id="articleDetail">
+                <!-- Article content will load here -->
+            </div>
         </section>
-
+        
+        <!-- ABOUT SECTION -->
+        <section id="about-section" class="container" style="display:none;">
+            <div class="page-content">
+                <h2>About KAUS News</h2>
+                <p>KAUS News is the premier news organization covering St. Kitts, Nevis, and the wider Caribbean region. Founded in 2023, we are committed to delivering accurate, timely news to our community.</p>
+                
+                <h3 style="margin-top: 20px;">Our Coverage</h3>
+                <p>We provide comprehensive coverage of:</p>
+                <ul style="margin: 15px 0 15px 20px;">
+                    <li>Local news from St. Kitts and Nevis</li>
+                    <li>Regional Caribbean developments</li>
+                    <li>International news affecting the Caribbean</li>
+                    <li>Weather updates for the Eastern Caribbean</li>
+                    <li>Cultural events and festivals</li>
+                </ul>
+                
+                <h3>Our Team</h3>
+                <p>Our team of experienced journalists and correspondents across the Caribbean ensure we bring you the most relevant and important stories from our region.</p>
+            </div>
+        </section>
+        
+        <!-- CONTACT SECTION -->
+        <section id="contact-section" class="container" style="display:none;">
+            <div class="page-content">
+                <h2>Contact Us</h2>
+                <p>Have a news tip or want to get in touch? Reach out to our team:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px;">
+                    <div>
+                        <h3><i class="fas fa-map-marker-alt"></i> Our Office</h3>
+                        <p>123 Bay Road<br>Basseterre, St. Kitts</p>
+                        
+                        <h3 style="margin-top: 20px;"><i class="fas fa-phone"></i> Phone</h3>
+                        <p>(869) 555-NEWS</p>
+                        
+                        <h3 style="margin-top: 20px;"><i class="fas fa-envelope"></i> Email</h3>
+                        <p>info@kausnews.com</p>
+                    </div>
+                    
+                    <div>
+                        <h3>Send Us a Message</h3>
+                        <form id="contactForm" class="contact-form">
+                            <div class="form-group">
+                                <label for="contact-name">Your Name</label>
+                                <input type="text" id="contact-name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
         <!-- WEATHER SECTION -->
-        <section id="weather-section" style="display: none;">
-            <h2>Caribbean Weather</h2>
+        <section id="weather-section" class="container" style="display:none;">
+            <h2><i class="fas fa-cloud-sun"></i> Caribbean Weather</h2>
             <div class="weather-card">
                 <div class="weather-header">
                     <div>
                         <h3>Basseterre, St. Kitts</h3>
                         <p id="weather-desc">Loading weather...</p>
                     </div>
-                    <div class="weather-temp" id="weather-temp">--°C</div>
+                    <div class="weather-temp" id="weather-temp">-- C</div>
                 </div>
                 <div class="weather-details">
                     <div class="weather-detail">
                         <i class="fas fa-wind"></i>
-                        <p>Wind</p>
                         <p id="weather-wind">-- km/h</p>
                     </div>
                     <div class="weather-detail">
                         <i class="fas fa-tint"></i>
-                        <p>Humidity</p>
                         <p id="weather-humidity">--%</p>
                     </div>
                     <div class="weather-detail">
                         <i class="fas fa-sun"></i>
-                        <p>UV Index</p>
                         <p id="weather-uv">--</p>
                     </div>
                 </div>
             </div>
             
-            <h3 style="margin-top: 30px;">Other Islands</h3>
-            <div id="weather-grid" class="news-grid"></div>
+            <h3 style="margin-top: 40px;">Other Islands</h3>
+            <div id="weather-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <!-- Other islands weather will load here -->
+            </div>
         </section>
-
+        
         <!-- EVENTS SECTION -->
-        <section id="events-section" style="display: none;">
-            <h2>Upcoming Events</h2>
-            <div id="eventsFeed" class="events-section"></div>
-        </section>
-
-        <!-- ABOUT SECTION -->
-        <section id="about-section" style="display: none;">
-            <div class="page-content">
-                <h2>About KAUS News</h2>
-                <p>KAUS News is the premier source for Caribbean news, delivering accurate and timely information from across the islands. Our team of dedicated journalists works around the clock to bring you the latest developments in politics, business, culture, and more.</p>
-                <p>Founded in 1995, we have grown to become the most trusted news source in the Eastern Caribbean, with bureaus in St. Kitts, Nevis, Antigua, and Barbados.</p>
+        <section id="events-section" class="container" style="display:none;">
+            <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
+            <div class="events-section" id="eventsFeed">
+                <!-- Events will load here -->
             </div>
         </section>
-
-        <!-- CONTACT SECTION -->
-        <section id="contact-section" style="display: none;">
-            <div class="page-content">
-                <h2>Contact Us</h2>
-                <form id="contactForm" name="contact" method="POST" data-netlify="true">
+        
+        <!-- DASHBOARD (Reporter View) -->
+        <div id="dashboard" class="dashboard">
+            <form id="articleForm" class="dashboard-form">
+                <h2>Create New Article</h2>
+                
+                <div class="form-group">
+                    <label for="articleTitle">Headline</label>
+                    <input type="text" id="articleTitle" required>
+                </div>
+                
+                <div class="form-row">
                     <div class="form-group">
-                        <label for="name">Name</label>
-                        <input type="text" id="name" name="name" required>
+                        <label for="articleCategory">Category</label>
+                        <select id="articleCategory" required>
+                            <option value="">Select Category</option>
+                            <option value="politics">Politics</option>
+                            <option value="business">Business</option>
+                            <option value="sports">Sports</option>
+                            <option value="entertainment">Entertainment</option>
+                        </select>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="email" id="email" name="email" required>
+                        <label for="articleLocation">Location</label>
+                        <select id="articleLocation" required>
+                            <option value="">Select Island</option>
+                            <option value="st-kitts">St. Kitts</option>
+                            <option value="nevis">Nevis</option>
+                            <option value="antigua">Antigua</option>
+                            <option value="barbados">Barbados</option>
+                            <option value="guyana">Guyana</option>
+                            <option value="jamaica">Jamaica</option>
+                            <option value="trinidad">Trinidad</option>
+                            <option value="regional">Regional</option>
+                        </select>
                     </div>
-                    <div class="form-group">
-                        <label for="message">Message</label>
-                        <textarea id="message" name="message" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleExcerpt">Excerpt (Short Summary)</label>
+                    <textarea id="articleExcerpt" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleContent">Full Content</label>
+                    <textarea id="articleContent" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <input type="file" id="articleImage" accept="image/*">
+                    <div id="imagePreview" class="image-preview">
+                        <img id="previewImage" src="#" alt="Preview">
                     </div>
-                    <button type="submit" class="btn btn-primary">Send Message</button>
-                </form>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Publish Article
+                    </button>
+                </div>
+            </form>
+            
+            <!-- Reporter's News Feed -->
+            <div class="dashboard-form" style="margin-top: 30px;">
+                <h2>Your Published Articles</h2>
+                <div class="news-grid" id="reporterNewsFeed">
+                    <!-- Reporter's articles will load here -->
+                </div>
             </div>
-        </section>
-    </main>
-
+        </div>
+    </div>
+    
+    <!-- LOGIN MODAL -->
+    <div id="loginModal" class="login-modal">
+        <div class="login-form">
+            <h2>Reporter Login</h2>
+            
+            <form id="loginForm">
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" required>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        Login
+                    </button>
+                </div>
+                
+                <p style="text-align: center; margin-top: 20px; font-size: 0.9rem;">
+                    Need reporter access? <a href="mailto:editor@kausnews.com">Contact your editor</a>
+                </p>
+            </form>
+        </div>
+    </div>
+    
     <!-- FOOTER -->
     <footer>
         <div class="container">
             <div class="footer-content">
                 <div class="footer-column">
                     <h3>KAUS News</h3>
-                    <p>Your trusted source for Caribbean news and information since 1995.</p>
+                    <p>Your trusted source for Caribbean news, weather, and events.</p>
                 </div>
+                
                 <div class="footer-column">
-                    <h3>Countries</h3>
+                    <h3>Islands We Cover</h3>
                     <ul>
                         <li><a href="#">St. Kitts & Nevis</a></li>
                         <li><a href="#">Antigua & Barbuda</a></li>
                         <li><a href="#">Barbados</a></li>
-                        <li><a href="#">Jamaica</a></li>
                         <li><a href="#">Guyana</a></li>
+                        <li><a href="#">Jamaica</a></li>
+                        <li><a href="#">Trinidad & Tobago</a></li>
                     </ul>
                 </div>
+                
                 <div class="footer-column">
-                    <h3>Company</h3>
+                    <h3>Contact</h3>
                     <ul>
-                        <li><a href="#" data-section="about">About Us</a></li>
-                        <li><a href="#" data-section="contact">Contact</a></li>
-                        <li><a href="#">Careers</a></li>
-                    </ul>
-                </div>
-                <div class="footer-column">
-                    <h3>Connect</h3>
-                    <ul>
-                        <li><a href="#"><i class="fab fa-facebook"></i> Facebook</a></li>
-                        <li><a href="#"><i class="fab fa-twitter"></i> Twitter</a></li>
-                        <li><a href="#"><i class="fab fa-instagram"></i> Instagram</a></li>
+                        <li><i class="fas fa-phone"></i> (869) 555-NEWS</li>
+                        <li><i class="fas fa-envelope"></i> info@kausnews.com</li>
+                        <li><i class="fas fa-map-marker-alt"></i> Basseterre, St. Kitts</li>
                     </ul>
                 </div>
             </div>
+            
             <div class="copyright">
-                <p>&copy; 2023 KAUS News Network. All rights reserved.</p>
+                <p>&copy; 2023 KAUS News. All rights reserved.</p>
             </div>
         </div>
     </footer>
-
-    <script src="https://identity.netlify.com/v1/netlify-identity-widget.js"></script>
+    
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
     
     <script>
-        // ===== NEWS LOADER =====
-        async function loadNews() {
-            const newsFeed = document.getElementById('newsFeed');
+        // ===== API CONFIGURATION =====
+        const NEWS_API_KEY = "78ae1b907f0c4458ab3f226e198f9389";
+        const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
+
+        // ===== FIREBASE CONFIG =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq35jwp6_LYZgfx1o84MXzv8BfYerVcj0",
+            authDomain: "stkittsnews-124f6.firebaseapp.com",
+            projectId: "stkittsnews-124f6",
+            storageBucket: "stkittsnews-124f6.appspot.com"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // ===== NEWS SOURCES =====
+        const NEWS_SOURCES = {
+            CARIBBEAN_NEWS: `https://newsapi.org/v2/top-headlines?country=kn&apiKey=${NEWS_API_KEY}`,
+            REGIONAL_NEWS: `https://newsapi.org/v2/top-headlines?country=gd&apiKey=${NEWS_API_KEY}`,
+            GUYANA_NEWS: `https://newsapi.org/v2/top-headlines?country=gy&apiKey=${NEWS_API_KEY}`
+        };
+
+        // ===== WEATHER API =====
+        const WEATHER_API = (city) => 
+            `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
+
+        // Caribbean capitals for weather
+        const CARIBBEAN_CAPITALS = [
+            { name: "Basseterre", country: "St. Kitts" },
+            { name: "Charlestown", country: "Nevis" },
+            { name: "St. John's", country: "Antigua" },
+            { name: "Bridgetown", country: "Barbados" },
+            { name: "Georgetown", country: "Guyana" },
+            { name: "Kingston", country: "Jamaica" },
+            { name: "Port of Spain", country: "Trinidad" }
+        ];
+
+        // ===== DOM ELEMENTS =====
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        const userEmail = document.getElementById('userEmail');
+        const loginModal = document.getElementById('loginModal');
+        const loginForm = document.getElementById('loginForm');
+        const newsFeed = document.getElementById('newsFeed');
+        const reporterNewsFeed = document.getElementById('reporterNewsFeed');
+        const articleDetail = document.getElementById('articleDetail');
+        const dashboard = document.getElementById('dashboard');
+        const articleForm = document.getElementById('articleForm');
+        const articleImage = document.getElementById('articleImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+        const eventsFeed = document.getElementById('eventsFeed');
+        const contactForm = document.getElementById('contactForm');
+        
+        // Weather elements
+        const weatherDesc = document.getElementById('weather-desc');
+        const weatherTemp = document.getElementById('weather-temp');
+        const weatherWind = document.getElementById('weather-wind');
+        const weatherHumidity = document.getElementById('weather-humidity');
+        const weatherUv = document.getElementById('weather-uv');
+
+        // ===== PAGE NAVIGATION =====
+        function showSection(section) {
+            console.log(`Showing section: ${section}`);
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('article-section').style.display = 'none';
+            document.getElementById('about-section').style.display = 'none';
+            document.getElementById('contact-section').style.display = 'none';
+            document.getElementById('weather-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
             
-            try {
-                // Show loading state
-                newsFeed.innerHTML = `
-                    <div class="loading-spinner">
-                        <i class="fas fa-spinner"></i>
-                        <p>Loading latest news...</p>
-                    </div>
-                `;
-                
-                // Try Netlify function first
-                let response = await fetch('/.netlify/functions/getCaribbeanNews');
-                
-                if (!response.ok) {
-                    throw new Error('Failed to load news from our server');
-                }
-                
-                let data = await response.json();
-                
-                // Handle different response formats
-                let articles = Array.isArray(data) ? data : 
-                              data.articles ? data.articles :
-                              data.results ? data.results : 
-                              [];
-                
-                if (articles.length === 0) {
-                    // Fallback to direct API if no articles
-                    response = await fetch('https://newsapi.org/v2/top-headlines?country=kn&apiKey=YOUR_API_KEY');
-                    data = await response.json();
-                    articles = data.articles || [];
-                }
-                
-                if (articles.length === 0) {
-                    throw new Error('No articles available at this time');
-                }
-                
-                // Display articles
-                displayNews(articles.slice(0, 6));
-                
-            } catch (error) {
-                console.error('News load error:', error);
-                newsFeed.innerHTML = `
-                    <div class="error-message">
-                        <p>?? News feed unavailable</p>
-                        <p>We're experiencing technical difficulties. Please try again later.</p>
-                        <p><small>${error.message}</small></p>
-                    </div>
-                `;
+            // Show selected section
+            const sectionEl = document.getElementById(`${section}-section`);
+            if (sectionEl) {
+                sectionEl.style.display = 'block';
             }
-        }
-        
-        function displayNews(articles) {
-            const newsFeed = document.getElementById('newsFeed');
             
-            newsFeed.innerHTML = articles.map(article => `
-                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
-                    <div class="news-image">
-                        <img src="${article.urlToImage || article.image_url || 'https://via.placeholder.com/300x200?text=News+Image'}" 
-                             alt="${article.title}"
-                             onerror="this.src='https://via.placeholder.com/300x200?text=Image+Not+Available'">
-                    </div>
-                    <div class="news-content">
-                        <span class="news-source">${article.source?.name || 'Caribbean News'}</span>
-                        <h3 class="news-title">${article.title}</h3>
-                        <p>${article.description || 'No description available'}</p>
-                        <p class="news-date">${formatDate(article.publishedAt || article.pubDate)}</p>
-                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-        
-        function formatDate(dateString) {
-            if (!dateString) return "Recent";
-            try {
-                const date = new Date(dateString);
-                return date.toLocaleDateString('en-US', {
-                    year: 'numeric',
-                    month: 'short',
-                    day: 'numeric'
-                });
-            } catch {
-                return "Recent";
+            // Load appropriate data
+            switch(section) {
+                case 'home':
+                    loadNews();
+                    break;
+                case 'weather':
+                    loadWeather();
+                    break;
+                case 'events':
+                    loadEvents();
+                    break;
             }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
-        
-        // ===== ARTICLE DETAIL VIEW =====
+
+        // ===== SHOW ARTICLE DETAIL =====
         function showArticleDetail(article) {
             // Hide all sections
-            document.querySelectorAll('main > section').forEach(section => {
-                section.style.display = 'none';
-            });
-            
-            // Show article section
+            document.getElementById('home-section').style.display = 'none';
             document.getElementById('article-section').style.display = 'block';
+            document.getElementById('about-section').style.display = 'none';
+            document.getElementById('contact-section').style.display = 'none';
+            document.getElementById('weather-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
             
             // Populate article detail
-            document.getElementById('articleDetail').innerHTML = `
+            articleDetail.innerHTML = `
                 <div class="article-header">
-                    <span class="article-source">${article.source?.name || "KAUS News"}</span>
-                    <span class="article-date">${formatDate(article.publishedAt || article.pubDate)}</span>
+                    <span class="article-source">${article.source || "KAUS News"}</span>
+                    <span class="article-date">${new Date(article.publishedAt || article.date).toLocaleDateString()}</span>
                     <h1 class="article-title">${article.title}</h1>
                     <div class="article-meta">
                         <span>By ${article.author || "KAUS Reporter"}</span>
                     </div>
                 </div>
                 
-                <img src="${article.urlToImage || article.image_url || 'https://via.placeholder.com/800x400?text=News+Image'}" 
-                     alt="${article.title}" 
-                     class="article-image"
-                     onerror="this.src='https://via.placeholder.com/800x400?text=Image+Not+Available'">
+                <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                     alt="${article.title}" class="article-image">
                 
                 <div class="article-content">
                     ${article.content ? article.content.replace(/\n/g, '<p>') : 
-                      `<p>${article.description || 'No content available'}</p>`}
+                      `<p>${article.description || article.excerpt || 'No content available'}</p>`}
                     
-                    ${article.url ? `<p><a href="${article.url}" target="_blank" class="btn btn-primary">Read Full Story</a></p>` : ''}
+                    ${article.url ? `<p><a href="${article.url}" target="_blank" class="btn btn-primary">Read Full Story on Original Site</a></p>` : ''}
                 </div>
                 
                 <a href="#" onclick="showSection('home'); return false;" class="back-link">
@@ -837,155 +1058,414 @@
             // Scroll to top
             window.scrollTo(0, 0);
         }
-        
-        // ===== PAGE NAVIGATION =====
-        function showSection(section) {
-            // Hide all sections
-            document.querySelectorAll('main > section').forEach(sec => {
-                sec.style.display = 'none';
-            });
-            
-            // Show selected section
-            const sectionEl = document.getElementById(`${section}-section`);
-            if (sectionEl) sectionEl.style.display = 'block';
-            
-            // Load data for section
-            switch(section) {
-                case 'home': 
-                    loadNews(); 
-                    break;
-                case 'weather': 
-                    loadWeather(); 
-                    break;
-                case 'events': 
-                    loadEvents(); 
-                    break;
-            }
-            
-            window.scrollTo(0, 0);
-        }
-        
-        // ===== WEATHER LOADER =====
+
+        // ===== LOAD WEATHER =====
         async function loadWeather() {
+            console.log("Loading weather data...");
             try {
-                const response = await fetch('/.netlify/functions/getWeather?city=Basseterre');
+                // Load St. Kitts weather
+                const response = await fetch(WEATHER_API("Basseterre"));
+                if (!response.ok) throw new Error("Weather API failed");
                 const data = await response.json();
                 
-                document.getElementById('weather-desc').textContent = data.condition;
-                document.getElementById('weather-temp').textContent = `${data.temp_c}°C`;
-                document.getElementById('weather-wind').textContent = `${data.wind_kph} km/h`;
-                document.getElementById('weather-humidity').textContent = `${data.humidity}%`;
-                document.getElementById('weather-uv').textContent = data.uv;
+                weatherDesc.textContent = data.current.condition.text;
+                weatherTemp.textContent = `${data.current.temp_c} C`;
+                weatherWind.textContent = `${data.current.wind_kph} km/h`;
+                weatherHumidity.textContent = `${data.current.humidity}%`;
                 
-                // Load other islands
-                const islands = ["Nevis", "Antigua", "Barbados", "Jamaica"];
+                // Load other islands weather
                 const weatherGrid = document.getElementById('weather-grid');
                 weatherGrid.innerHTML = '';
                 
-                for (const island of islands) {
-                    const islandResponse = await fetch(`/.netlify/functions/getWeather?city=${island}`);
-                    const islandData = await islandResponse.json();
-                    
+                // For demo, we'll use the same data for other islands
+                const demoIslands = [
+                    { name: "Nevis", temp: data.current.temp_c + 1, description: data.current.condition.text },
+                    { name: "Antigua", temp: data.current.temp_c - 1, description: data.current.condition.text },
+                    { name: "Barbados", temp: data.current.temp_c + 2, description: data.current.condition.text },
+                    { name: "Guyana", temp: data.current.temp_c - 2, description: data.current.condition.text }
+                ];
+                
+                demoIslands.forEach(island => {
                     weatherGrid.innerHTML += `
                         <div class="weather-card">
                             <div class="weather-header">
                                 <div>
-                                    <h4>${island}</h4>
-                                    <p>${islandData.condition}</p>
+                                    <h4>${island.name}</h4>
+                                    <p>${island.description}</p>
                                 </div>
-                                <div class="weather-temp">${islandData.temp_c}°C</div>
+                                <div class="weather-temp">${island.temp} C</div>
                             </div>
                         </div>
                     `;
-                }
+                });
                 
             } catch (error) {
-                console.error("Weather load error:", error);
-                document.getElementById('weather-desc').textContent = "Weather data unavailable";
+                console.error("Error loading weather:", error);
+                // Fallback to demo data if API fails
+                const weatherData = {
+                    temp: 28,
+                    description: "Partly Cloudy",
+                    wind: 15,
+                    humidity: 78,
+                    uv: 8
+                };
+                
+                weatherDesc.textContent = weatherData.description;
+                weatherTemp.textContent = `${weatherData.temp} C`;
+                weatherWind.textContent = `${weatherData.wind} km/h`;
+                weatherHumidity.textContent = `${weatherData.humidity}%`;
+                weatherUv.textContent = `${weatherData.uv} (High)`;
+                
+                // Load demo data for other islands
+                const weatherGrid = document.getElementById('weather-grid');
+                weatherGrid.innerHTML = '';
+                
+                const demoIslands = [
+                    { name: "Nevis", temp: 29, description: "Sunny" },
+                    { name: "Antigua", temp: 28, description: "Partly Cloudy" },
+                    { name: "Barbados", temp: 30, description: "Mostly Sunny" },
+                    { name: "Guyana", temp: 27, description: "Scattered Showers" }
+                ];
+                
+                demoIslands.forEach(island => {
+                    weatherGrid.innerHTML += `
+                        <div class="weather-card">
+                            <div class="weather-header">
+                                <div>
+                                    <h4>${island.name}</h4>
+                                    <p>${island.description}</p>
+                                </div>
+                                <div class="weather-temp">${island.temp} C</div>
+                            </div>
+                        </div>
+                    `;
+                });
             }
         }
-        
-        // ===== EVENTS LOADER =====
-        async function loadEvents() {
+
+        // ===== LOAD NEWS =====
+        async function loadNews() {
+            console.log("Loading news data...");
             try {
-                const response = await fetch('/.netlify/functions/getEvents');
-                const events = await response.json();
+                // Try to load from NewsAPI
+                const response = await fetch(NEWS_SOURCES.CARIBBEAN_NEWS);
+                if (!response.ok) throw new Error("News API failed");
+                const data = await response.json();
                 
-                const eventsFeed = document.getElementById('eventsFeed');
-                eventsFeed.innerHTML = events.map(event => `
-                    <div class="event-card">
-                        <div class="event-date">
-                            <div class="event-day">${new Date(event.start.local).getDate()}</div>
-                            <div class="event-month">${new Date(event.start.local).toLocaleString('default', { month: 'short' })}</div>
+                // Display news from API
+                newsFeed.innerHTML = data.articles.slice(0, 6).map(article => `
+                    <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                        <div class="news-image">
+                            <img src="${article.urlToImage || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" alt="${article.title}">
                         </div>
-                        <div class="event-details">
-                            <div class="event-title">${event.name.text}</div>
-                            <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.venue.name}</div>
-                            <p>${event.description.text.substring(0, 150)}...</p>
+                        <div class="news-content">
+                            <span class="news-source">${article.source?.name || "Caribbean News"}</span>
+                            <h3 class="news-title">${article.title}</h3>
+                            <p>${article.description || "No description available"}</p>
+                            <p class="news-date">${new Date(article.publishedAt).toLocaleDateString()}</p>
+                            ${article.url ? `<a href="${article.url}" target="_blank" class="news-link">Read More on Original Site</a>` : ''}
                         </div>
                     </div>
                 `).join('');
                 
             } catch (error) {
-                console.error("Events load error:", error);
-                document.getElementById('eventsFeed').innerHTML = `
-                    <div class="error-message">
-                        <p>?? Events unavailable</p>
-                        <p>Check back later for upcoming events</p>
+                console.error("Error loading news from API:", error);
+                // Fallback to demo news data
+                const demoNews = [
+                    {
+                        title: "Government Announces New Infrastructure Projects",
+                        excerpt: "The government has unveiled plans for major road improvements across St. Kitts and Nevis.",
+                        content: "<p>The government of St. Kitts and Nevis today announced a comprehensive infrastructure development plan that will see major improvements to roads, bridges, and public utilities across both islands.</p><p>Prime Minister Dr. Terrance Drew revealed the $150 million project during a press conference at Government House. 'This investment in our infrastructure is critical for the continued growth of our economy and the improvement of our citizens' quality of life,' he stated.</p><p>The project will focus on three main areas: road resurfacing and expansion, bridge reinforcement, and upgrading water and sewage systems. Work is expected to begin in the third quarter of this year and continue through 2025.</p>",
+                        date: new Date().toISOString(),
+                        imageUrl: "https://images.unsplash.com/photo-1605100804763-247f67b3557e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        source: "SKN Vibes",
+                        author: "John Smith"
+                    },
+                    {
+                        title: "Tourism Numbers Reach Record High",
+                        excerpt: "St. Kitts and Nevis reports highest ever tourist arrivals for the winter season.",
+                        content: "<p>Tourism officials in St. Kitts and Nevis are celebrating record-breaking visitor numbers for the 2022-2023 winter season, with over 250,000 stayover visitors recorded between November and April.</p><p>This represents a 15% increase over the previous record set in the 2018-2019 season. Tourism Minister Marsha Henderson attributes the growth to several factors: 'Our marketing campaigns in key source markets, improved airlift, and the successful reopening after the pandemic have all contributed to this outstanding performance.'</p><p>The majority of visitors came from the United States (45%), Canada (25%), and the UK (15%), with increasing numbers from European markets. Cruise ship arrivals also showed strong recovery, with 350,000 passengers disembarking in Basseterre.</p>",
+                        date: new Date().toISOString(),
+                        imageUrl: "https://images.unsplash.com/photo-1471922694854-ff2b4b6dba33?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80",
+                        source: "Caribbean News",
+                        author: "Sarah Johnson"
+                    },
+                    {
+                        title: "New Solar Farm Project Approved",
+                        excerpt: "Government approves construction of 10MW solar farm to boost renewable energy capacity.",
+                        content: "<p>In a move to reduce dependence on fossil fuels, the government has approved plans for a 10-megawatt solar farm to be built on the outskirts of Basseterre. The project, a joint venture between the St. Kitts Electricity Company and a European renewable energy firm, will be the largest solar installation in the Federation.</p><p>Energy Minister Konris Maynard said the solar farm will provide approximately 15% of the island's peak electricity demand when completed. 'This is a significant step toward our goal of achieving 100% renewable energy by 2030,' Maynard stated during the announcement.</p><p>The $18 million project is expected to create 50 construction jobs and will occupy 25 acres of land near the RLB International Airport. Construction is slated to begin in September with completion expected by mid-2024.</p>",
+                        date: new Date().toISOString(),
+                        imageUrl: "https://images.unsplash.com/photo-1509391366360-2e959784a276?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1472&q=80",
+                        source: "Energy Caribbean",
+                        author: "Michael Brown"
+                    }
+                ];
+                
+                // Display demo news
+                newsFeed.innerHTML = demoNews.map(article => `
+                    <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                        <div class="news-image">
+                            <img src="${article.imageUrl}" alt="${article.title}">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-source">${article.source}</span>
+                            <h3 class="news-title">${article.title}</h3>
+                            <p>${article.excerpt}</p>
+                            <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                            <a href="#" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')}); return false;" class="news-link">Read Full Story</a>
+                        </div>
                     </div>
-                `;
+                `).join('');
             }
         }
-        
-        // ===== INITIALIZATION =====
-        document.addEventListener('DOMContentLoaded', () => {
-            // Initialize Netlify Identity
-            if (window.netlifyIdentity) {
-                window.netlifyIdentity.on('init', user => {
-                    if (user) {
-                        document.getElementById('loginBtn').style.display = 'none';
-                        document.getElementById('userDropdown').style.display = 'block';
-                        document.getElementById('userEmail').textContent = user.email;
-                        document.getElementById('dashboard').style.display = 'block';
+
+        // ===== LOAD REPORTER'S NEWS =====
+        async function loadReporterNews() {
+            console.log("Loading reporter's news...");
+            try {
+                // In a real implementation, this would load from Firestore
+                const demoReporterNews = [
+                    {
+                        title: "Local Fishermen Report Record Catch",
+                        excerpt: "Fishermen in Old Road Town celebrate their best season in a decade.",
+                        content: "<p>Fishermen in Old Road Town are celebrating what they're calling the best fishing season in over a decade, with record catches of tuna, wahoo, and mahi-mahi.</p><p>'This has been our best season since 2012,' said veteran fisherman Calvin Morton. 'We've been bringing in twice our usual catch on most trips.' Marine biologists attribute the increased catches to several factors, including favorable ocean currents and successful conservation efforts that have allowed fish stocks to recover.</p><p>The bountiful season has led to lower seafood prices at local markets and restaurants, much to the delight of residents and tourists alike. Fisheries officials say they're cautiously optimistic that the trend will continue through the summer months.</p>",
+                        date: new Date().toISOString(),
+                        imageUrl: "https://images.unsplash.com/photo-1570784063106-7431cb7c3d53?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        source: "KAUS News",
+                        author: "Lisa Williams"
+                    },
+                    {
+                        title: "New Cultural Center Opens in Charlestown",
+                        excerpt: "Nevis celebrates the opening of a state-of-the-art cultural center showcasing local heritage.",
+                        content: "<p>Nevisian officials and community members gathered yesterday for the grand opening of the Charlestown Cultural Center, a $5 million facility dedicated to preserving and promoting the island's rich heritage.</p><p>The center features exhibition spaces, a performance theater, and workshops for traditional crafts like boat building and basket weaving. 'This center is a dream come true for our community,' said Culture Minister Eric Evelyn. 'It provides a space where we can celebrate our history and pass on traditions to future generations.'</p><p>The opening ceremony featured performances by the Nevisian Choral Society, demonstrations of traditional dances, and an exhibition of historic photographs documenting life on the island over the past century. The center will be open to the public six days a week with free admission for local students.</p>",
+                        date: new Date().toISOString(),
+                        imageUrl: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1470&q=80",
+                        source: "KAUS News",
+                        author: "David Thompson"
                     }
-                });
+                ];
                 
-                window.netlifyIdentity.on('login', user => {
-                    window.location.href = '/admin/';
-                });
+                // Display reporter's news
+                reporterNewsFeed.innerHTML = demoReporterNews.map(article => `
+                    <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                        <div class="news-image">
+                            <img src="${article.imageUrl}" alt="${article.title}">
+                        </div>
+                        <div class="news-content">
+                            <span class="news-source">${article.source}</span>
+                            <h3 class="news-title">${article.title}</h3>
+                            <p>${article.excerpt}</p>
+                            <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                            <a href="#" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')}); return false;" class="news-link">Read Full Story</a>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error("Error loading reporter's news:", error);
+                reporterNewsFeed.innerHTML = `<p>Error loading your articles. Please try again later.</p>`;
             }
-            
-            // Set up navigation
-            document.querySelectorAll('.nav-links a').forEach(link => {
-                link.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showSection(link.getAttribute('data-section'));
-                });
-            });
-            
-            // Initialize contact form
-            document.getElementById('contactForm').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const formData = new FormData(e.target);
-                
-                try {
-                    const response = await fetch('/', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-                        body: new URLSearchParams(formData).toString()
-                    });
-                    
-                    if (response.ok) {
-                        alert('Thank you for your message!');
-                        e.target.reset();
+        }
+
+        // ===== LOAD EVENTS =====
+        async function loadEvents() {
+            console.log("Loading events data...");
+            try {
+                // For demo purposes - in production, use real APIs
+                const demoEvents = [
+                    {
+                        title: "St. Kitts Music Festival",
+                        date: "2023-06-22",
+                        location: "Warner Park, Basseterre",
+                        description: "Annual music festival featuring local and international artists"
+                    },
+                    {
+                        title: "Nevis Culturama",
+                        date: "2023-07-28",
+                        location: "Various Locations, Nevis",
+                        description: "Celebration of Nevisian culture and heritage"
+                    },
+                    {
+                        title: "Guyana Jazz Festival",
+                        date: "2023-08-15",
+                        location: "Georgetown, Guyana",
+                        description: "Premier jazz event featuring regional and international performers"
+                    },
+                    {
+                        title: "Barbados Crop Over Festival",
+                        date: "2023-07-10",
+                        location: "Bridgetown, Barbados",
+                        description: "Colorful carnival celebration marking the end of the sugar cane harvest"
                     }
-                } catch (error) {
-                    alert('Error submitting form. Please try again.');
+                ];
+                
+                // Display events
+                eventsFeed.innerHTML = demoEvents.map(event => `
+                    <div class="event-card">
+                        <div class="event-date">
+                            <div class="event-day">${new Date(event.date).getDate()}</div>
+                            <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
+                            <p>${event.description}</p>
+                        </div>
+                    </div>
+                `).join('');
+                
+            } catch (error) {
+                console.error("Error loading events:", error);
+                eventsFeed.innerHTML = `<p>Error loading events. Please try again later.</p>`;
+            }
+        }
+
+        // ===== CONTACT FORM =====
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
+            
+            try {
+                // In a real implementation, this would save to Firestore
+                console.log("Contact form submitted:", { name, email, message });
+                alert('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+                
+            } catch (error) {
+                console.error("Error submitting contact form:", error);
+                alert("Error submitting form. Please try again.");
+            }
+        });
+
+        // ===== AUTHENTICATION =====
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is logged in
+                console.log("User logged in:", user.email);
+                loginBtn.style.display = 'none';
+                userDropdown.style.display = 'block';
+                userEmail.textContent = user.email;
+                loginModal.classList.remove('show');
+                document.getElementById('news').style.display = 'none';
+                document.querySelector('#home-section h2').style.display = 'none';
+                dashboard.style.display = 'block';
+                loadReporterNews();
+            } else {
+                // User is logged out
+                console.log("User logged out");
+                loginBtn.style.display = 'block';
+                userDropdown.style.display = 'none';
+                document.getElementById('news').style.display = 'block';
+                document.querySelector('#home-section h2').style.display = 'block';
+                dashboard.style.display = 'none';
+                loadNews();
+            }
+        });
+
+        // ===== EVENT LISTENERS =====
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Login button clicked");
+            loginModal.classList.add('show');
+        });
+
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Logout button clicked");
+            auth.signOut();
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log("Login form submitted");
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert("Login failed: " + error.message);
+            }
+        });
+
+        articleImage.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    previewImage.src = event.target.result;
+                    imagePreview.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        articleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log("Article form submitted");
+            
+            const title = document.getElementById('articleTitle').value;
+            const excerpt = document.getElementById('articleExcerpt').value;
+            const content = document.getElementById('articleContent').value;
+            const category = document.getElementById('articleCategory').value;
+            const location = document.getElementById('articleLocation').value;
+            const imageFile = articleImage.files[0];
+            
+            try {
+                console.log("Article data:", { title, excerpt, content, category, location });
+                
+                // In a real implementation, this would save to Firestore
+                alert('Article published successfully! (Demo mode)');
+                articleForm.reset();
+                imagePreview.classList.remove('show');
+                
+                // Reload reporter's news
+                loadReporterNews();
+                
+            } catch (error) {
+                console.error("Error publishing article:", error);
+                alert("Error publishing article: " + error.message);
+            }
+        });
+
+        // Navigation click handlers
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        // Close modal when clicking outside
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove('show');
+            }
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Page loaded");
+            showSection('home');
+            
+            // Set up auth state listener
+            auth.onAuthStateChanged(user => {
+                if (user) {
+                    console.log("User is logged in:", user.email);
+                    loginBtn.style.display = 'none';
+                    userDropdown.style.display = 'block';
+                    userEmail.textContent = user.email;
+                } else {
+                    console.log("User is logged out");
+                    loginBtn.style.display = 'block';
+                    userDropdown.style.display = 'none';
                 }
             });
-            
-            // Load initial content
-            showSection('home');
         });
     </script>
 </body>
