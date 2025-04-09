@@ -472,54 +472,115 @@
             }
         }
         
-        /* ===== EVENT CALENDAR ===== */
+        /* ===== EVENTS SECTION ===== */
         .events-section {
             background: white;
             border-radius: 8px;
-            padding: 20px;
+            padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
         }
-        
+
+        .events-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .refresh-events {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
         .event-card {
             display: flex;
-            margin-bottom: 20px;
-            padding-bottom: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 25px;
             border-bottom: 1px solid #eee;
+            transition: all 0.3s ease;
         }
-        
+
+        .event-card:hover {
+            transform: translateX(5px);
+        }
+
         .event-date {
             background: var(--primary);
             color: white;
-            padding: 10px;
+            padding: 12px;
             border-radius: 8px;
             text-align: center;
-            min-width: 70px;
-            margin-right: 15px;
+            min-width: 80px;
+            margin-right: 20px;
+            height: fit-content;
         }
-        
+
         .event-day {
-            font-size: 1.5rem;
+            font-size: 1.8rem;
             font-weight: bold;
             line-height: 1;
         }
-        
+
         .event-month {
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             text-transform: uppercase;
         }
-        
+
         .event-details {
             flex: 1;
         }
-        
+
         .event-title {
             font-weight: bold;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
+            font-size: 1.2rem;
         }
-        
+
+        .event-source {
+            display: inline-block;
+            background: var(--dark);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.7rem;
+            margin-bottom: 8px;
+        }
+
         .event-location {
             color: var(--text-light);
             font-size: 0.9rem;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .event-description {
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        .event-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .loading-events, .error-events {
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
         }
         
         /* ===== ABOUT/CONTACT PAGES ===== */
@@ -917,7 +978,7 @@
                         <div class="loading-news">Loading local news from BuckieGotIt...</div>
                     </div>
                 </section>
-
+                
                 <!-- NEWS SECTION -->
                 <section id="news">
                     <div class="refresh-container">
@@ -1114,9 +1175,15 @@
         
         <!-- EVENTS SECTION -->
         <section id="events-section" class="container" style="display:none;">
-            <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
+            <div class="refresh-container">
+                <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
+                <button id="refreshEvents" class="refresh-btn">
+                    <i class="fas fa-sync-alt spinner"></i>
+                    <span class="text">Refresh Events</span>
+                </button>
+            </div>
             <div class="events-section" id="eventsFeed">
-                <!-- Events will load here -->
+                <div class="loading-events">Loading Caribbean events...</div>
             </div>
         </section>
         
@@ -1384,6 +1451,7 @@
         const imagePreview = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
         const eventsFeed = document.getElementById('eventsFeed');
+        const refreshEventsBtn = document.getElementById('refreshEvents');
         const contactForm = document.getElementById('contactForm');
         const activeStorms = document.getElementById('active-storms');
         const refreshBtn = document.getElementById('refreshNews');
@@ -1880,41 +1948,73 @@
 
         // ===== LOAD EVENTS =====
         async function loadEvents() {
-            console.log("Loading events data...");
+            console.log("Loading Caribbean events...");
+            refreshEventsBtn.classList.add('loading');
+            eventsFeed.innerHTML = '<div class="loading-events">Loading events...</div>';
+            
             try {
-                // Load from Firestore
-                const querySnapshot = await db.collection("events").orderBy("date").limit(10).get();
+                const response = await fetch('/.netlify/functions/getEvents');
+                if (!response.ok) throw new Error("Events API failed");
                 
-                if (querySnapshot.empty) {
-                    eventsFeed.innerHTML = '<p>No upcoming events scheduled.</p>';
-                    return;
-                }
-                
-                eventsFeed.innerHTML = '';
-                
-                querySnapshot.forEach(doc => {
-                    const event = doc.data();
-                    const eventDate = new Date(event.date);
-                    
-                    eventsFeed.innerHTML += `
-                        <div class="event-card">
-                            <div class="event-date">
-                                <div class="event-day">${eventDate.getDate()}</div>
-                                <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
-                            </div>
-                            <div class="event-details">
-                                <div class="event-title">${event.title}</div>
-                                <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
-                                <p>${event.description}</p>
-                            </div>
-                        </div>
-                    `;
-                });
+                const events = await response.json();
+                displayEvents(events);
                 
             } catch (error) {
                 console.error("Error loading events:", error);
-                eventsFeed.innerHTML = '<p>Error loading events. Please try again later.</p>';
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>Error loading events. <button onclick="loadEvents()" class="btn btn-primary">Retry</button></p>
+                    </div>
+                `;
+            } finally {
+                refreshEventsBtn.classList.remove('loading');
             }
+        }
+
+        // ===== DISPLAY EVENTS =====
+        function displayEvents(events) {
+            if (!events || events.length === 0) {
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>No upcoming events found.</p>
+                        <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter out past events and sort by date
+            const upcomingEvents = events
+                .filter(event => new Date(event.date) >= new Date())
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (upcomingEvents.length === 0) {
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>No upcoming events scheduled. Check back later!</p>
+                        <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsFeed.innerHTML = upcomingEvents.map(event => `
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">${new Date(event.date).getDate()}</div>
+                        <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
+                    </div>
+                    <div class="event-details">
+                        <span class="event-source">${event.source || 'Caribbean Event'}</span>
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i> ${event.location || 'Caribbean'}
+                        </div>
+                        ${event.description ? `<p class="event-description">${event.description.substring(0, 120)}...</p>` : ''}
+                        ${event.url ? `<a href="${event.url}" target="_blank" class="event-link">More details <i class="fas fa-external-link-alt"></i></a>` : ''}
+                    </div>
+                </div>
+            `).join('');
         }
 
         // ===== CONTACT FORM =====
@@ -2065,10 +2165,14 @@
             }
         });
 
-        // Refresh button handler
+        // Refresh button handlers
         refreshBtn.addEventListener('click', () => {
             loadLocalNews();
             loadAllNews();
+        });
+
+        refreshEventsBtn.addEventListener('click', () => {
+            loadEvents();
         });
 
         // Initialize the page
@@ -2076,66 +2180,6 @@
             console.log("Page loaded");
             showSection('home');
         });
-        // ===== EVENT SOURCES =====
-const EVENT_SOURCES = [
-  {
-    name: "St. Kitts Tourism",
-    url: "https://www.stkittstourism.kn/events",
-    type: "scrape"
-  },
-  {
-    name: "Caribbean Events",
-    url: "https://www.caribbeannewsnow.com/events/feed/",
-    type: "rss"
-  }
-];
-
-// ===== LOAD EVENTS =====
-async function loadEvents() {
-  console.log("Loading events...");
-  eventsFeed.innerHTML = '<div class="loading-news">Loading Caribbean events...</div>';
-
-  try {
-    const response = await fetch('/.netlify/functions/getEvents');
-    if (!response.ok) throw new Error("Events API failed");
-    
-    const events = await response.json();
-    displayEvents(events);
-    
-  } catch (error) {
-    console.error("Error loading events:", error);
-    eventsFeed.innerHTML = `
-      <div class="error-news">
-        <p>Error loading events. <button onclick="loadEvents()">Retry</button></p>
-      </div>
-    `;
-  }
-}
-
-// ===== DISPLAY EVENTS =====
-function displayEvents(events) {
-  if (!events || events.length === 0) {
-    eventsFeed.innerHTML = '<p>No upcoming events found.</p>';
-    return;
-  }
-
-  eventsFeed.innerHTML = events.map(event => `
-    <div class="event-card">
-      <div class="event-date">
-        <div class="event-day">${new Date(event.date).getDate()}</div>
-        <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
-      </div>
-      <div class="event-details">
-        <div class="event-title">${event.title}</div>
-        <div class="event-location">
-          <i class="fas fa-map-marker-alt"></i> ${event.location}
-        </div>
-        <p>${event.description.substring(0, 100)}...</p>
-        ${event.url ? `<a href="${event.url}" target="_blank" class="news-link">More Details</a>` : ''}
-      </div>
-    </div>
-  `).join('');
-}
     </script>
 </body>
 </html>
