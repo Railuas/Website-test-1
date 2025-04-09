@@ -154,6 +154,7 @@
         .news-image {
             height: 200px;
             overflow: hidden;
+            position: relative;
         }
         
         .news-image img {
@@ -161,6 +162,27 @@
             height: 100%;
             object-fit: cover;
             transition: transform 0.3s ease;
+            background-color: #f0f0f0;
+        }
+        
+        .news-image img.error {
+            visibility: hidden;
+        }
+        
+        .news-image .image-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #999;
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
         }
         
         .news-card:hover .news-image img {
@@ -206,6 +228,28 @@
         
         .news-link:hover {
             text-decoration: underline;
+        }
+        
+        /* ===== LOCAL NEWS SECTION ===== */
+        .local-news-section {
+            background: #f0f8ff;
+            padding: 30px 0;
+            margin-bottom: 40px;
+        }
+        
+        .local-news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .local-news-header h2 {
+            color: var(--primary);
+        }
+        
+        .local-news-header img {
+            height: 40px;
         }
         
         /* ===== ARTICLE DETAIL PAGE ===== */
@@ -770,10 +814,47 @@
             padding: 40px;
             color: var(--secondary);
         }
+        
+        /* Improved mobile login button */
+        @media (max-width: 768px) {
+            .auth-section {
+                position: static;
+            }
+            
+            #loginBtn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            
+            #loginBtn .fa-user {
+                margin-right: 0;
+            }
+            
+            #loginBtn span {
+                display: none;
+            }
+            
+            .user-dropdown {
+                width: 180px;
+                right: 10px;
+                bottom: 80px;
+                top: auto;
+            }
+        }
     </style>
 </head>
 <body>
-    <!-- [YOUR EXISTING HTML STRUCTURE REMAINS THE SAME] -->
     <!-- HEADER -->
     <header>
         <div class="container header-content">
@@ -826,10 +907,21 @@
             </div>
             
             <div class="container">
+                <!-- LOCAL NEWS SECTION -->
+                <section class="local-news-section">
+                    <div class="local-news-header">
+                        <h2><i class="fas fa-map-marker-alt"></i> St. Kitts & Nevis Local News</h2>
+                        <img src="https://buckiegotit.com/wp-content/uploads/2021/05/buckiegotit-logo.png" alt="BuckieGotIt Logo">
+                    </div>
+                    <div class="news-grid" id="localNewsFeed">
+                        <div class="loading-news">Loading local news from BuckieGotIt...</div>
+                    </div>
+                </section>
+
                 <!-- NEWS SECTION -->
                 <section id="news">
                     <div class="refresh-container">
-                        <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                        <h2><i class="fas fa-newspaper"></i> Latest Caribbean News</h2>
                         <button id="refreshNews" class="refresh-btn">
                             <i class="fas fa-sync-alt spinner"></i>
                             <span class="text">Refresh News</span>
@@ -850,7 +942,6 @@
             </div>
         </section>
         
-        <!-- [REST OF YOUR HTML REMAINS THE SAME] -->
         <!-- ARTICLE DETAIL SECTION -->
         <section id="article-section" class="container" style="display:none;">
             <div class="article-detail" id="articleDetail">
@@ -931,7 +1022,7 @@
                         <h3>Basseterre, St. Kitts</h3>
                         <p id="weather-desc">Loading weather...</p>
                     </div>
-                    <div class="weather-temp" id="weather-temp">-- C</div>
+                    <div class="weather-temp" id="weather-temp">--°C</div>
                 </div>
                 <div class="weather-details">
                     <div class="weather-detail">
@@ -1230,8 +1321,19 @@
             }
         ];
 
+        // ===== LOCAL NEWS SOURCE =====
+        const LOCAL_NEWS_SOURCE = {
+            name: "BuckieGotIt",
+            url: "https://buckiegotit.com/",
+            type: "scrape",
+            selector: ".jeg_postblock_1 .jeg_post_title a",
+            baseUrl: "https://buckiegotit.com",
+            image: "https://buckiegotit.com/wp-content/uploads/2021/05/buckiegotit-logo.png"
+        };
+
         // ===== API CONFIGURATION =====
         const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
+        const HURRICANE_API_URL = "https://www.nhc.noaa.gov/gtwo.xml";
 
         // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
@@ -1272,6 +1374,7 @@
         const loginModal = document.getElementById('loginModal');
         const loginForm = document.getElementById('loginForm');
         const newsFeed = document.getElementById('newsFeed');
+        const localNewsFeed = document.getElementById('localNewsFeed');
         const reporterNewsFeed = document.getElementById('reporterNewsFeed');
         const reporterNewsSection = document.getElementById('reporter-news');
         const articleDetail = document.getElementById('articleDetail');
@@ -1323,7 +1426,7 @@
                     .sort((a, b) => new Date(b.date) - new Date(a.date))
                     .slice(0, 24);
                 
-                displayArticles(sortedArticles);
+                displayArticles(sortedArticles, newsFeed);
                 
             } catch (error) {
                 console.error("Error loading news:", error);
@@ -1335,6 +1438,104 @@
                 `;
             } finally {
                 refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // ===== LOAD LOCAL NEWS =====
+        async function loadLocalNews() {
+            console.log("Loading local news from BuckieGotIt...");
+            localNewsFeed.innerHTML = '<div class="loading-news">Loading local news from BuckieGotIt...</div>';
+            
+            try {
+                // First try scraping
+                let articles = await scrapeLocalNews(LOCAL_NEWS_SOURCE);
+                
+                // If scraping fails, try RSS as fallback
+                if (articles.length === 0) {
+                    console.log("Scraping failed, trying RSS fallback...");
+                    articles = await fetchLocalRSSFeed();
+                }
+                
+                if (articles.length > 0) {
+                    displayArticles(articles, localNewsFeed);
+                } else {
+                    localNewsFeed.innerHTML = '<div class="error-news"><p>No local news found. Please try again later.</p></div>';
+                }
+            } catch (error) {
+                console.error("Error loading local news:", error);
+                localNewsFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading local news. Please try refreshing.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ===== LOCAL NEWS SCRAPER =====
+        async function scrapeLocalNews(source) {
+            console.log(`Scraping local news from ${source.name}...`);
+            try {
+                const proxyUrl = "https://api.allorigins.win/get?url=";
+                const encodedUrl = encodeURIComponent(source.url);
+                const response = await fetch(`${proxyUrl}${encodedUrl}`);
+                
+                if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data.contents, "text/html");
+                
+                const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
+                
+                return articleLinks.slice(0, 6).map(link => ({
+                    title: link.textContent.trim(),
+                    url: link.getAttribute('href'),
+                    source: source.name,
+                    date: new Date().toISOString(),
+                    description: `Local news from ${source.name}`,
+                    imageUrl: source.image || "https://via.placeholder.com/300x200?text=Local+News"
+                }));
+            } catch (error) {
+                console.error("Error scraping local news:", error);
+                return [];
+            }
+        }
+
+        // ===== LOCAL RSS FETCHER (FALLBACK) =====
+        async function fetchLocalRSSFeed() {
+            console.log("Fetching local news via RSS fallback...");
+            try {
+                const rssUrl = "https://buckiegotit.com/feed/";
+                const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+                const response = await fetch(rssProxy);
+                
+                if (!response.ok) throw new Error("Failed to fetch local RSS feed");
+                
+                const data = await response.json();
+                
+                return data.items.slice(0, 6).map(item => {
+                    let imageUrl = item.thumbnail || LOCAL_NEWS_SOURCE.image;
+                    
+                    // Try to extract image from content if not available
+                    if (!imageUrl && item.content) {
+                        const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                        if (imgMatch) {
+                            imageUrl = imgMatch[1];
+                        }
+                    }
+                    
+                    return {
+                        title: item.title,
+                        url: item.link,
+                        source: LOCAL_NEWS_SOURCE.name,
+                        date: item.pubDate,
+                        description: item.description || `Local news from ${LOCAL_NEWS_SOURCE.name}`,
+                        imageUrl: imageUrl || "https://via.placeholder.com/300x200?text=Local+News"
+                    };
+                });
+            } catch (error) {
+                console.error("Error fetching local RSS feed:", error);
+                return [];
             }
         }
 
@@ -1372,29 +1573,52 @@
             if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
             
             const data = await response.json();
-            return data.items.slice(0, 6).map(item => ({
-                title: item.title,
-                url: item.link,
-                source: source.name,
-                date: item.pubDate,
-                description: item.description || `Read more on ${source.name}`,
-                imageUrl: item.thumbnail || source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
-            }));
+            
+            // Improved image extraction
+            return data.items.slice(0, 6).map(item => {
+                let imageUrl = item.thumbnail || source.image;
+                
+                // Try to extract image from content if not available
+                if (!imageUrl && item.content) {
+                    const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                    if (imgMatch) {
+                        imageUrl = imgMatch[1];
+                    }
+                }
+                
+                // Final fallback
+                if (!imageUrl) {
+                    imageUrl = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(source.name);
+                }
+                
+                return {
+                    title: item.title,
+                    url: item.link,
+                    source: source.name,
+                    date: item.pubDate,
+                    description: item.description || `Read more on ${source.name}`,
+                    imageUrl: imageUrl
+                };
+            });
         }
 
         // ===== DISPLAY ARTICLES =====
-        function displayArticles(articles) {
-            const newsFeed = document.getElementById('newsFeed');
-            
+        function displayArticles(articles, container) {
             if (!articles || articles.length === 0) {
-                newsFeed.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
+                container.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
                 return;
             }
             
-            newsFeed.innerHTML = articles.map(article => `
+            container.innerHTML = articles.map(article => `
                 <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
                     <div class="news-image">
-                        <img src="${article.imageUrl}" alt="${article.title}" loading="lazy">
+                        <img src="${article.imageUrl}" 
+                             alt="${article.title}" 
+                             loading="lazy"
+                             onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
+                        <div class="image-fallback" style="display: none;">
+                            ${article.source}<br>${article.title}
+                        </div>
                     </div>
                     <div class="news-content">
                         <span class="news-source">${article.source}</span>
@@ -1428,6 +1652,7 @@
             // Load appropriate data
             switch(section) {
                 case 'home':
+                    loadLocalNews();
                     loadAllNews();
                     break;
                 case 'weather':
@@ -1467,8 +1692,15 @@
                     </div>
                 </div>
                 
-                <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
-                     alt="${article.title}" class="article-image">
+                <div style="position: relative; height: 400px;">
+                    <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                         alt="${article.title}" 
+                         class="article-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-fallback" style="display: none; height: 400px; font-size: 1.5rem;">
+                        ${article.source}<br>${article.title}
+                    </div>
+                </div>
                 
                 <div class="article-content">
                     ${article.content ? article.content.replace(/\n/g, '<p>') : 
@@ -1496,9 +1728,10 @@
                 const data = await response.json();
                 
                 weatherDesc.textContent = data.current.condition.text;
-                weatherTemp.textContent = `${data.current.temp_c} C`;
+                weatherTemp.textContent = `${data.current.temp_c}°C`;
                 weatherWind.textContent = `${data.current.wind_kph} km/h`;
                 weatherHumidity.textContent = `${data.current.humidity}%`;
+                weatherUv.textContent = data.current.uv;
                 
                 // Load other islands weather
                 const weatherGrid = document.getElementById('weather-grid');
@@ -1517,7 +1750,17 @@
                                         <h4>${capital.name}, ${capital.country}</h4>
                                         <p>${islandData.current.condition.text}</p>
                                     </div>
-                                    <div class="weather-temp">${islandData.current.temp_c} C</div>
+                                    <div class="weather-temp">${islandData.current.temp_c}°C</div>
+                                </div>
+                                <div class="weather-details">
+                                    <div class="weather-detail">
+                                        <i class="fas fa-wind"></i>
+                                        <p>${islandData.current.wind_kph} km/h</p>
+                                    </div>
+                                    <div class="weather-detail">
+                                        <i class="fas fa-tint"></i>
+                                        <p>${islandData.current.humidity}%</p>
+                                    </div>
                                 </div>
                             </div>
                         `;
@@ -1529,7 +1772,7 @@
             } catch (error) {
                 console.error("Error loading weather:", error);
                 weatherDesc.textContent = "Weather data unavailable";
-                weatherTemp.textContent = "-- C";
+                weatherTemp.textContent = "--°C";
                 weatherWind.textContent = "-- km/h";
                 weatherHumidity.textContent = "--%";
                 weatherUv.textContent = "--";
@@ -1540,32 +1783,35 @@
         async function loadHurricaneData() {
             console.log("Loading hurricane data...");
             try {
-                // Use the National Hurricane Center API or similar
-                const response = await fetch('https://www.nhc.noaa.gov/gtwo.php?basin=atlc&fdays=2');
-                const text = await response.text();
+                // Fetch the NHC RSS feed
+                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(HURRICANE_API_URL));
+                if (!response.ok) throw new Error("Failed to fetch hurricane data");
                 
-                // Parse the response (this is simplified - in production you'd need proper parsing)
+                const data = await response.json();
                 const parser = new DOMParser();
-                const doc = parser.parseFromString(text, 'text/html');
-                const storms = [];
+                const xmlDoc = parser.parseFromString(data.contents, "text/xml");
                 
-                // Extract storm information (this will need to be adjusted based on the actual API response)
-                const stormElements = doc.querySelectorAll('.stormInfo');
-                stormElements.forEach(element => {
-                    const name = element.querySelector('.stormName')?.textContent || 'Unnamed Storm';
-                    const status = element.querySelector('.stormStatus')?.textContent || 'Active';
-                    const location = element.querySelector('.stormLocation')?.textContent || 'Atlantic Ocean';
-                    const winds = element.querySelector('.stormWinds')?.textContent || 'Unknown';
+                // Parse the XML data
+                const storms = [];
+                const items = xmlDoc.getElementsByTagName("item");
+                
+                for (let i = 0; i < items.length; i++) {
+                    const title = items[i].getElementsByTagName("title")[0].textContent;
+                    const description = items[i].getElementsByTagName("description")[0].textContent;
                     
-                    storms.push({
-                        name,
-                        category: status,
-                        location,
-                        winds,
-                        movement: "NW at 15 mph", // Example - would come from API
-                        pressure: "1000 mb" // Example - would come from API
-                    });
-                });
+                    // Extract storm details from description
+                    const detailsMatch = description.match(/A (.*?) is located near (.*?) with maximum sustained winds of (.*?)\./);
+                    
+                    if (detailsMatch) {
+                        storms.push({
+                            name: title.replace("Atlantic Tropical Weather Outlook", "").trim(),
+                            category: detailsMatch[1],
+                            location: detailsMatch[2],
+                            winds: detailsMatch[3],
+                            description: description
+                        });
+                    }
+                }
                 
                 if (storms.length > 0) {
                     // Display active storms
@@ -1575,8 +1821,7 @@
                             <div class="storm-details">
                                 <p><strong>Location:</strong> ${storm.location}</p>
                                 <p><strong>Max Winds:</strong> ${storm.winds}</p>
-                                <p><strong>Movement:</strong> ${storm.movement}</p>
-                                <p><strong>Pressure:</strong> ${storm.pressure}</p>
+                                <p>${storm.description}</p>
                             </div>
                         </div>
                     `).join('');
@@ -1609,7 +1854,12 @@
                     reporterNewsFeed.innerHTML += `
                         <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
                             <div class="news-image">
-                                <img src="${article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" alt="${article.title}">
+                                <img src="${article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                                     alt="${article.title}"
+                                     onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
+                                <div class="image-fallback" style="display: none;">
+                                    KAUS News<br>${article.title}
+                                </div>
                             </div>
                             <div class="news-content">
                                 <span class="news-source">KAUS News</span>
@@ -1756,6 +2006,7 @@
             }
             
             // Always load news (whether logged in or not)
+            loadLocalNews();
             loadAllNews();
         });
 
@@ -1815,7 +2066,10 @@
         });
 
         // Refresh button handler
-        refreshBtn.addEventListener('click', loadAllNews);
+        refreshBtn.addEventListener('click', () => {
+            loadLocalNews();
+            loadAllNews();
+        });
 
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
@@ -1823,204 +2077,5 @@
             showSection('home');
         });
     </script>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAUS News - Caribbean News Network</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* [ALL YOUR EXISTING CSS REMAINS THE SAME] */
-        
-        /* Add these new styles at the end of your CSS */
-        
-        /* Improved mobile login button */
-        @media (max-width: 768px) {
-            .auth-section {
-                position: static;
-            }
-            
-            #loginBtn {
-                padding: 8px 12px;
-                font-size: 0.8rem;
-                position: fixed;
-                bottom: 20px;
-                right: 20px;
-                z-index: 1000;
-                border-radius: 50%;
-                width: 50px;
-                height: 50px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            }
-            
-            #loginBtn .fa-user {
-                margin-right: 0;
-            }
-            
-            #loginBtn span {
-                display: none;
-            }
-            
-            .user-dropdown {
-                width: 180px;
-                right: 10px;
-                bottom: 80px;
-                top: auto;
-            }
-        }
-        
-        /* Fallback for broken images */
-        .news-image {
-            position: relative;
-        }
-        
-        .news-image img {
-            background-color: #f0f0f0;
-        }
-        
-        .news-image img.error {
-            visibility: hidden;
-        }
-        
-        .news-image .image-fallback {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background-color: #f0f0f0;
-            color: #999;
-            font-size: 1rem;
-            text-align: center;
-            padding: 10px;
-        }
-    </style>
-</head>
-<body>
-    <!-- [YOUR EXISTING HTML STRUCTURE REMAINS THE SAME] -->
-
-    <script>
-        // ===== MODIFIED FUNCTIONS TO HANDLE IMAGE ERRORS =====
-        
-        // Update the displayArticles function to include image error handling
-        function displayArticles(articles) {
-            const newsFeed = document.getElementById('newsFeed');
-            
-            if (!articles || articles.length === 0) {
-                newsFeed.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
-                return;
-            }
-            
-            newsFeed.innerHTML = articles.map(article => `
-                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
-                    <div class="news-image">
-                        <img src="${article.imageUrl}" 
-                             alt="${article.title}" 
-                             loading="lazy"
-                             onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
-                        <div class="image-fallback" style="display: none;">
-                            ${article.source}<br>${article.title}
-                        </div>
-                    </div>
-                    <div class="news-content">
-                        <span class="news-source">${article.source}</span>
-                        <h3 class="news-title">${article.title}</h3>
-                        <p>${article.description.substring(0, 100)}...</p>
-                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
-                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // Update the showArticleDetail function to handle image errors
-        function showArticleDetail(article) {
-            // [Previous code remains the same until the image part]
-            
-            articleDetail.innerHTML = `
-                <div class="article-header">
-                    <span class="article-source">${article.source || "KAUS News"}</span>
-                    <span class="article-date">${new Date(article.publishedAt || article.date).toLocaleDateString()}</span>
-                    <h1 class="article-title">${article.title}</h1>
-                    <div class="article-meta">
-                        <span>By ${article.author || "KAUS Reporter"}</span>
-                    </div>
-                </div>
-                
-                <div style="position: relative; height: 400px;">
-                    <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
-                         alt="${article.title}" 
-                         class="article-image"
-                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                    <div class="image-fallback" style="display: none; height: 400px; font-size: 1.5rem;">
-                        ${article.source}<br>${article.title}
-                    </div>
-                </div>
-                
-                <div class="article-content">
-                    ${article.content ? article.content.replace(/\n/g, '<p>') : 
-                      `<p>${article.description || article.excerpt || 'No content available'}</p>`}
-                    
-                    ${article.url ? `<p><a href="${article.url}" target="_blank" class="btn btn-primary">Read Full Story on Original Site</a></p>` : ''}
-                </div>
-                
-                <a href="#" onclick="showSection('home'); return false;" class="back-link">
-                    <i class="fas fa-arrow-left"></i> Back to News
-                </a>
-            `;
-            
-            // Scroll to top
-            window.scrollTo(0, 0);
-        }
-
-        // ===== MODIFIED RSS FETCHER TO IMPROVE IMAGE HANDLING =====
-        async function fetchRSSFeed(source) {
-            console.log(`Fetching RSS from ${source.name}...`);
-            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-            const response = await fetch(rssProxy);
-            
-            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
-            
-            const data = await response.json();
-            return data.items.slice(0, 6).map(item => {
-                // Improved image extraction
-                let imageUrl = item.thumbnail || source.image;
-                
-                // Try to extract image from content if not available
-                if (!imageUrl && item.content) {
-                    const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
-                    if (imgMatch) {
-                        imageUrl = imgMatch[1];
-                    }
-                }
-                
-                // Final fallback
-                if (!imageUrl) {
-                    imageUrl = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(source.name);
-                }
-                
-                return {
-                    title: item.title,
-                    url: item.link,
-                    source: source.name,
-                    date: item.pubDate,
-                    description: item.description || `Read more on ${source.name}`,
-                    imageUrl: imageUrl
-                };
-            });
-        }
-
-        // [REST OF YOUR JAVASCRIPT REMAINS THE SAME]
-    </script>
-</body>
-</html>
 </body>
 </html>
