@@ -1648,5 +1648,260 @@
             });
         });
     </script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUS News - Caribbean News Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [PASTE ALL YOUR EXISTING CSS HERE - NO CHANGES NEEDED] */
+        
+        /* Add this new style for the refresh button */
+        .refresh-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            margin: 20px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #004494;
+        }
+        
+        .refresh-btn .spinner {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+        
+        .refresh-btn.loading .spinner {
+            display: inline-block;
+        }
+        
+        .refresh-btn.loading .text {
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <!-- [YOUR EXISTING HTML REMAINS THE SAME UNTIL NEWS SECTION] -->
+    
+    <!-- MODIFY YOUR NEWS SECTION TO ADD REFRESH BUTTON -->
+    <section id="news">
+        <div class="container">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                <button id="refreshNews" class="refresh-btn">
+                    <i class="fas fa-sync-alt spinner"></i>
+                    <span class="text">Refresh News</span>
+                </button>
+            </div>
+            <div class="news-grid" id="newsFeed">
+                <!-- News articles will load here -->
+                <div class="loading-news">Loading Caribbean news...</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- [THE REST OF YOUR HTML REMAINS THE SAME] -->
+
+    <script>
+        // ===== CARIBBEAN NEWS SOURCES =====
+        const CARIBBEAN_NEWS_SOURCES = [
+            // SKN Vibes (scraped)
+            {
+                name: "SKN Vibes",
+                url: "https://www.sknvibes.com/news/news.cfm",
+                type: "scrape",
+                selector: ".news-item h3 a",
+                baseUrl: "https://www.sknvibes.com"
+            },
+            
+            // RSS Feeds
+            {
+                name: "Caribbean News Global",
+                url: "https://caribbeannewsglobal.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Jamaica Observer",
+                url: "https://www.jamaicaobserver.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Nation News Barbados",
+                url: "https://nationnews.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Trinidad Express",
+                url: "https://trinidadexpress.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "St. Lucia Times",
+                url: "https://stluciatimes.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Antigua Observer",
+                url: "https://antiguaobserver.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Dominica News Online",
+                url: "https://dominicanewsonline.com/feed/",
+                type: "rss"
+            },
+            {
+                name: "Barbados Today",
+                url: "https://barbadostoday.bb/feed/",
+                type: "rss"
+            }
+        ];
+
+        // ===== NEWS LOADER =====
+        async function loadAllNews() {
+            console.log("Loading news from all Caribbean sources...");
+            const refreshBtn = document.getElementById('refreshNews');
+            refreshBtn.classList.add('loading');
+            
+            try {
+                const allArticles = [];
+                
+                // Load from each source in parallel
+                await Promise.all(CARIBBEAN_NEWS_SOURCES.map(async (source) => {
+                    try {
+                        let articles = [];
+                        
+                        if (source.type === "scrape") {
+                            articles = await scrapeNews(source);
+                        } else {
+                            articles = await fetchRSSFeed(source);
+                        }
+                        
+                        allArticles.push(...articles);
+                    } catch (error) {
+                        console.error(`Error loading ${source.name}:`, error);
+                    }
+                });
+                
+                // Sort by date and limit to 24 articles
+                const sortedArticles = allArticles
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 24);
+                
+                displayArticles(sortedArticles);
+                
+            } catch (error) {
+                console.error("Error loading news:", error);
+                document.getElementById('newsFeed').innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading news. Please try refreshing.</p>
+                        <button onclick="loadAllNews()">Retry</button>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // ===== NEWS SCRAPER =====
+        async function scrapeNews(source) {
+            console.log(`Scraping ${source.name}...`);
+            const proxyUrl = "https://api.allorigins.win/get?url=";
+            const encodedUrl = encodeURIComponent(source.url);
+            const response = await fetch(`${proxyUrl}${encodedUrl}`);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
+            
+            const data = await response.json();
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(data.contents, "text/html");
+            
+            const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
+            
+            return articleLinks.slice(0, 6).map(link => ({
+                title: link.textContent.trim(),
+                url: `${source.baseUrl}${link.getAttribute('href')}`,
+                source: source.name,
+                date: new Date().toISOString(),
+                description: `Latest news from ${source.name}`,
+                imageUrl: source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
+            }));
+        }
+
+        // ===== RSS FETCHER =====
+        async function fetchRSSFeed(source) {
+            console.log(`Fetching RSS from ${source.name}...`);
+            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const response = await fetch(rssProxy);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
+            
+            const data = await response.json();
+            return data.items.slice(0, 6).map(item => ({
+                title: item.title,
+                url: item.link,
+                source: source.name,
+                date: item.pubDate,
+                description: item.description || `Read more on ${source.name}`,
+                imageUrl: item.thumbnail || source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
+            }));
+        }
+
+        // ===== DISPLAY ARTICLES =====
+        function displayArticles(articles) {
+            const newsFeed = document.getElementById('newsFeed');
+            
+            if (!articles || articles.length === 0) {
+                newsFeed.innerHTML = '<p>No articles found. Please try again later.</p>';
+                return;
+            }
+            
+            newsFeed.innerHTML = articles.map(article => `
+                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                    <div class="news-image">
+                        <img src="${article.imageUrl}" alt="${article.title}" loading="lazy">
+                    </div>
+                    <div class="news-content">
+                        <span class="news-source">${article.source}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p>${article.description.substring(0, 100)}...</p>
+                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== REFRESH BUTTON =====
+        document.getElementById('refreshNews').addEventListener('click', loadAllNews);
+
+        // ===== INITIAL LOAD =====
+        document.addEventListener('DOMContentLoaded', () => {
+            loadAllNews();
+            // [KEEP YOUR EXISTING DOMCONTENTLOADED CODE]
+        });
+
+        // [KEEP YOUR EXISTING showArticleDetail() FUNCTION]
+    </script>
+</body>
+</html>
 </body>
 </html>
