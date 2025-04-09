@@ -472,326 +472,139 @@
             }
         }
         
-        /* ===== EVENTS SECTION ===== */
-        .events-section {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+// ===== EVENT FUNCTIONS =====
+async function loadEvents() {
+    console.log("Loading Caribbean events...");
+    const eventsFeed = document.getElementById('eventsFeed');
+    const refreshBtn = document.getElementById('refreshEvents');
+    
+    refreshBtn.classList.add('loading');
+    eventsFeed.innerHTML = '<div class="loading-events">Loading events...</div>';
+    
+    try {
+        // First try to load from Firestore
+        const firestoreEvents = await loadEventsFromFirestore();
+        
+        if (firestoreEvents.length > 0) {
+            displayEvents(firestoreEvents);
+        } else {
+            // If no events in Firestore, try the API
+            const response = await fetch('/.netlify/functions/getEvents');
+            if (!response.ok) throw new Error("Events API failed");
+            
+            const apiEvents = await response.json();
+            displayEvents(apiEvents);
+            
+            // Save these events to Firestore for next time
+            await saveEventsToFirestore(apiEvents);
         }
+    } catch (error) {
+        console.error("Error loading events:", error);
+        eventsFeed.innerHTML = `
+            <div class="error-events">
+                <p>Error loading events. <button onclick="loadEvents()" class="btn btn-primary">Retry</button></p>
+            </div>
+        `;
+    } finally {
+        refreshBtn.classList.remove('loading');
+    }
+}
 
-        .events-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-        }
+async function loadEventsFromFirestore() {
+    try {
+        const now = new Date();
+        const querySnapshot = await db.collection("events")
+            .where("date", ">=", now.toISOString())
+            .orderBy("date")
+            .limit(10)
+            .get();
+        
+        return querySnapshot.docs.map(doc => doc.data());
+    } catch (error) {
+        console.error("Error loading events from Firestore:", error);
+        return [];
+    }
+}
 
-        .refresh-events {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 8px 15px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
+async function saveEventsToFirestore(events) {
+    try {
+        const batch = db.batch();
+        const eventsRef = db.collection("events");
+        
+        // Clear old events first
+        const oldEvents = await db.collection("events").get();
+        oldEvents.forEach(doc => {
+            batch.delete(doc.ref);
+        });
+        
+        // Add new events
+        events.forEach(event => {
+            const docRef = eventsRef.doc(); // Auto-generated ID
+            batch.set(docRef, {
+                title: event.title,
+                date: event.date,
+                location: event.location || 'Caribbean',
+                description: event.description || '',
+                url: event.url || '',
+                source: event.source || 'Caribbean Events',
+                lastUpdated: new Date().toISOString()
+            });
+        });
+        
+        await batch.commit();
+        console.log("Events saved to Firestore");
+    } catch (error) {
+        console.error("Error saving events to Firestore:", error);
+    }
+}
 
-        .event-card {
-            display: flex;
-            margin-bottom: 25px;
-            padding-bottom: 25px;
-            border-bottom: 1px solid #eee;
-            transition: all 0.3s ease;
-        }
+function displayEvents(events) {
+    const eventsFeed = document.getElementById('eventsFeed');
+    
+    if (!events || events.length === 0) {
+        eventsFeed.innerHTML = `
+            <div class="error-events">
+                <p>No upcoming events found.</p>
+                <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+            </div>
+        `;
+        return;
+    }
 
-        .event-card:hover {
-            transform: translateX(5px);
-        }
+    // Filter out past events and sort by date
+    const now = new Date();
+    const upcomingEvents = events
+        .filter(event => new Date(event.date) >= now)
+        .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-        .event-date {
-            background: var(--primary);
-            color: white;
-            padding: 12px;
-            border-radius: 8px;
-            text-align: center;
-            min-width: 80px;
-            margin-right: 20px;
-            height: fit-content;
-        }
+    if (upcomingEvents.length === 0) {
+        eventsFeed.innerHTML = `
+            <div class="error-events">
+                <p>No upcoming events scheduled. Check back later!</p>
+                <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+            </div>
+        `;
+        return;
+    }
 
-        .event-day {
-            font-size: 1.8rem;
-            font-weight: bold;
-            line-height: 1;
-        }
-
-        .event-month {
-            font-size: 0.9rem;
-            text-transform: uppercase;
-        }
-
-        .event-details {
-            flex: 1;
-        }
-
-        .event-title {
-            font-weight: bold;
-            margin-bottom: 8px;
-            font-size: 1.2rem;
-        }
-
-        .event-source {
-            display: inline-block;
-            background: var(--dark);
-            color: white;
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-size: 0.7rem;
-            margin-bottom: 8px;
-        }
-
-        .event-location {
-            color: var(--text-light);
-            font-size: 0.9rem;
-            margin-bottom: 10px;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .event-description {
-            margin-bottom: 10px;
-            color: var(--text);
-        }
-
-        .event-link {
-            color: var(--primary);
-            text-decoration: none;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-        }
-
-        .loading-events, .error-events {
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-        }
-        
-        /* ===== ABOUT/CONTACT PAGES ===== */
-        .page-content {
-            background: white;
-            border-radius: 8px;
-            padding: 30px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-        }
-        
-        .contact-form .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .contact-form label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .contact-form input,
-        .contact-form textarea {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: var(--font-main);
-        }
-        
-        .contact-form textarea {
-            min-height: 150px;
-        }
-        
-        /* ===== AUTH STYLES ===== */
-        .auth-section {
-            position: relative;
-        }
-        
-        .user-dropdown {
-            position: absolute;
-            right: 0;
-            top: 100%;
-            background: white;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            border-radius: 4px;
-            padding: 15px;
-            width: 200px;
-            display: none;
-        }
-        
-        .user-dropdown.show {
-            display: block;
-        }
-        
-        /* ===== LOGIN MODAL ===== */
-        .login-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            display: none;
-        }
-        
-        .login-modal.show {
-            display: flex;
-        }
-        
-        .login-form {
-            background: white;
-            width: 100%;
-            max-width: 400px;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
-        }
-        
-        .login-form h2 {
-            margin-bottom: 20px;
-            text-align: center;
-        }
-        
-        .form-group {
-            margin-bottom: 20px;
-        }
-        
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        
-        .form-group input {
-            width: 100%;
-            padding: 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: var(--font-main);
-        }
-        
-        .form-actions {
-            margin-top: 30px;
-            text-align: center;
-        }
-        
-        /* ===== DASHBOARD ===== */
-        .dashboard {
-            display: none;
-            padding: 30px 0;
-        }
-        
-        .dashboard-form {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
-            max-width: 800px;
-            margin: 0 auto;
-        }
-        
-        .dashboard-form h2 {
-            margin-bottom: 30px;
-            text-align: center;
-        }
-        
-        .form-row {
-            display: flex;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-        
-        .form-row .form-group {
-            flex: 1;
-        }
-        
-        textarea {
-            width: 100%;
-            min-height: 200px;
-            padding: 15px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-family: var(--font-main);
-        }
-        
-        .image-upload {
-            margin-bottom: 20px;
-        }
-        
-        .image-preview {
-            margin-top: 15px;
-            display: none;
-        }
-        
-        .image-preview.show {
-            display: block;
-        }
-        
-        .image-preview img {
-            max-width: 100%;
-            max-height: 300px;
-            border-radius: 4px;
-        }
-        
-        /* ===== FOOTER ===== */
-        footer {
-            background: var(--dark);
-            color: white;
-            padding: 30px 0;
-            margin-top: 50px;
-        }
-        
-        .footer-content {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 30px;
-        }
-        
-        .footer-column h3 {
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-        
-        .footer-column ul {
-            list-style: none;
-        }
-        
-        .footer-column ul li {
-            margin-bottom: 10px;
-        }
-        
-        .footer-column ul li a {
-            color: #ddd;
-            text-decoration: none;
-            transition: all 0.3s ease;
-        }
-        
-        .footer-column ul li a:hover {
-            color: white;
-        }
-        
-        .copyright {
-            text-align: center;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid rgba(255,255,255,0.1);
-        }
+    eventsFeed.innerHTML = upcomingEvents.map(event => `
+        <div class="event-card">
+            <div class="event-date">
+                <div class="event-day">${new Date(event.date).getDate()}</div>
+                <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
+            </div>
+            <div class="event-details">
+                <span class="event-source">${event.source || 'Caribbean Event'}</span>
+                <h3 class="event-title">${event.title}</h3>
+                <div class="event-location">
+                    <i class="fas fa-map-marker-alt"></i> ${event.location || 'Caribbean'}
+                </div>
+                ${event.description ? `<p class="event-description">${event.description.substring(0, 120)}...</p>` : ''}
+                ${event.url ? `<a href="${event.url}" target="_blank" class="event-link">More details <i class="fas fa-external-link-alt"></i></a>` : ''}
+            </div>
+        </div>
+    `).join('');
+}
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
