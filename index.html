@@ -2076,6 +2076,66 @@
             console.log("Page loaded");
             showSection('home');
         });
+        // ===== EVENT SOURCES =====
+const EVENT_SOURCES = [
+  {
+    name: "St. Kitts Tourism",
+    url: "https://www.stkittstourism.kn/events",
+    type: "scrape"
+  },
+  {
+    name: "Caribbean Events",
+    url: "https://www.caribbeannewsnow.com/events/feed/",
+    type: "rss"
+  }
+];
+
+// ===== LOAD EVENTS =====
+async function loadEvents() {
+  console.log("Loading events...");
+  eventsFeed.innerHTML = '<div class="loading-news">Loading Caribbean events...</div>';
+
+  try {
+    const response = await fetch('/.netlify/functions/getEvents');
+    if (!response.ok) throw new Error("Events API failed");
+    
+    const events = await response.json();
+    displayEvents(events);
+    
+  } catch (error) {
+    console.error("Error loading events:", error);
+    eventsFeed.innerHTML = `
+      <div class="error-news">
+        <p>Error loading events. <button onclick="loadEvents()">Retry</button></p>
+      </div>
+    `;
+  }
+}
+
+// ===== DISPLAY EVENTS =====
+function displayEvents(events) {
+  if (!events || events.length === 0) {
+    eventsFeed.innerHTML = '<p>No upcoming events found.</p>';
+    return;
+  }
+
+  eventsFeed.innerHTML = events.map(event => `
+    <div class="event-card">
+      <div class="event-date">
+        <div class="event-day">${new Date(event.date).getDate()}</div>
+        <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
+      </div>
+      <div class="event-details">
+        <div class="event-title">${event.title}</div>
+        <div class="event-location">
+          <i class="fas fa-map-marker-alt"></i> ${event.location}
+        </div>
+        <p>${event.description.substring(0, 100)}...</p>
+        ${event.url ? `<a href="${event.url}" target="_blank" class="news-link">More Details</a>` : ''}
+      </div>
+    </div>
+  `).join('');
+}
     </script>
 </body>
 </html>
