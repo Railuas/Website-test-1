@@ -712,9 +712,68 @@
                 height: 250px;
             }
         }
+
+        /* ===== NEW STYLES FOR NEWS SCRAPER ===== */
+        .refresh-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .refresh-btn {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .refresh-btn:hover {
+            background: #004494;
+        }
+        
+        .refresh-btn .spinner {
+            display: none;
+            animation: spin 1s linear infinite;
+        }
+        
+        .refresh-btn.loading .spinner {
+            display: inline-block;
+        }
+        
+        .refresh-btn.loading .text {
+            display: none;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .loading-news {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .error-news {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+        }
     </style>
 </head>
 <body>
+    <!-- [YOUR EXISTING HTML STRUCTURE REMAINS THE SAME] -->
     <!-- HEADER -->
     <header>
         <div class="container header-content">
@@ -769,9 +828,15 @@
             <div class="container">
                 <!-- NEWS SECTION -->
                 <section id="news">
-                    <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                    <div class="refresh-container">
+                        <h2><i class="fas fa-newspaper"></i> Latest News</h2>
+                        <button id="refreshNews" class="refresh-btn">
+                            <i class="fas fa-sync-alt spinner"></i>
+                            <span class="text">Refresh News</span>
+                        </button>
+                    </div>
                     <div class="news-grid" id="newsFeed">
-                        <!-- News articles will load here -->
+                        <div class="loading-news">Loading Caribbean news...</div>
                     </div>
                 </section>
 
@@ -785,6 +850,7 @@
             </div>
         </section>
         
+        <!-- [REST OF YOUR HTML REMAINS THE SAME] -->
         <!-- ARTICLE DETAIL SECTION -->
         <section id="article-section" class="container" style="display:none;">
             <div class="article-detail" id="articleDetail">
@@ -1101,9 +1167,71 @@
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
     
     <script>
+        // ===== CARIBBEAN NEWS SOURCES =====
+        const CARIBBEAN_NEWS_SOURCES = [
+            // SKN Vibes (scraped)
+            {
+                name: "SKN Vibes",
+                url: "https://www.sknvibes.com/news/news.cfm",
+                type: "scrape",
+                selector: ".news-item h3 a",
+                baseUrl: "https://www.sknvibes.com",
+                image: "https://www.sknvibes.com/images/logo.png"
+            },
+            
+            // RSS Feeds
+            {
+                name: "Caribbean News Global",
+                url: "https://caribbeannewsglobal.com/feed/",
+                type: "rss",
+                image: "https://caribbeannewsglobal.com/wp-content/uploads/2020/10/cropped-Caribbean-News-Global-Logo-32x32.png"
+            },
+            {
+                name: "Jamaica Observer",
+                url: "https://www.jamaicaobserver.com/feed/",
+                type: "rss",
+                image: "https://www.jamaicaobserver.com/wp-content/uploads/2021/01/cropped-JO-Icon-192x192.png"
+            },
+            {
+                name: "Nation News Barbados",
+                url: "https://nationnews.com/feed/",
+                type: "rss",
+                image: "https://nationnews.com/wp-content/themes/nation-news/images/nation-news-logo.png"
+            },
+            {
+                name: "Trinidad Express",
+                url: "https://trinidadexpress.com/feed/",
+                type: "rss",
+                image: "https://trinidadexpress.com/wp-content/themes/express/images/logo.png"
+            },
+            {
+                name: "St. Lucia Times",
+                url: "https://stluciatimes.com/feed/",
+                type: "rss",
+                image: "https://stluciatimes.com/wp-content/uploads/2021/01/st-lucia-times-logo.png"
+            },
+            {
+                name: "Antigua Observer",
+                url: "https://antiguaobserver.com/feed/",
+                type: "rss",
+                image: "https://antiguaobserver.com/wp-content/uploads/2021/01/antigua-observer-logo.png"
+            },
+            {
+                name: "Dominica News Online",
+                url: "https://dominicanewsonline.com/feed/",
+                type: "rss",
+                image: "https://dominicanewsonline.com/wp-content/uploads/2021/01/dominica-news-online-logo.png"
+            },
+            {
+                name: "Barbados Today",
+                url: "https://barbadostoday.bb/feed/",
+                type: "rss",
+                image: "https://barbadostoday.bb/wp-content/uploads/2021/01/barbados-today-logo.png"
+            }
+        ];
+
         // ===== API CONFIGURATION =====
         const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
-        const RSS_FEED_URL = "https://your-rss-feed-url.com"; // Replace with your actual RSS feed URL
 
         // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
@@ -1155,6 +1283,7 @@
         const eventsFeed = document.getElementById('eventsFeed');
         const contactForm = document.getElementById('contactForm');
         const activeStorms = document.getElementById('active-storms');
+        const refreshBtn = document.getElementById('refreshNews');
         
         // Weather elements
         const weatherDesc = document.getElementById('weather-desc');
@@ -1162,6 +1291,121 @@
         const weatherWind = document.getElementById('weather-wind');
         const weatherHumidity = document.getElementById('weather-humidity');
         const weatherUv = document.getElementById('weather-uv');
+
+        // ===== NEWS LOADING FUNCTIONS =====
+        async function loadAllNews() {
+            console.log("Loading news from all Caribbean sources...");
+            refreshBtn.classList.add('loading');
+            newsFeed.innerHTML = '<div class="loading-news">Loading latest news...</div>';
+            
+            try {
+                const allArticles = [];
+                
+                // Load from each source in parallel
+                await Promise.all(CARIBBEAN_NEWS_SOURCES.map(async (source) => {
+                    try {
+                        let articles = [];
+                        
+                        if (source.type === "scrape") {
+                            articles = await scrapeNews(source);
+                        } else {
+                            articles = await fetchRSSFeed(source);
+                        }
+                        
+                        allArticles.push(...articles);
+                    } catch (error) {
+                        console.error(`Error loading ${source.name}:`, error);
+                    }
+                }));
+                
+                // Sort by date and limit to 24 articles
+                const sortedArticles = allArticles
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 24);
+                
+                displayArticles(sortedArticles);
+                
+            } catch (error) {
+                console.error("Error loading news:", error);
+                newsFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading news. Please try refreshing.</p>
+                        <button onclick="loadAllNews()" class="btn btn-primary">Retry</button>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // ===== NEWS SCRAPER =====
+        async function scrapeNews(source) {
+            console.log(`Scraping ${source.name}...`);
+            const proxyUrl = "https://api.allorigins.win/get?url=";
+            const encodedUrl = encodeURIComponent(source.url);
+            const response = await fetch(`${proxyUrl}${encodedUrl}`);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
+            
+            const data = await response.json();
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(data.contents, "text/html");
+            
+            const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
+            
+            return articleLinks.slice(0, 6).map(link => ({
+                title: link.textContent.trim(),
+                url: `${source.baseUrl}${link.getAttribute('href')}`,
+                source: source.name,
+                date: new Date().toISOString(),
+                description: `Latest news from ${source.name}`,
+                imageUrl: source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
+            }));
+        }
+
+        // ===== RSS FETCHER =====
+        async function fetchRSSFeed(source) {
+            console.log(`Fetching RSS from ${source.name}...`);
+            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const response = await fetch(rssProxy);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
+            
+            const data = await response.json();
+            return data.items.slice(0, 6).map(item => ({
+                title: item.title,
+                url: item.link,
+                source: source.name,
+                date: item.pubDate,
+                description: item.description || `Read more on ${source.name}`,
+                imageUrl: item.thumbnail || source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
+            }));
+        }
+
+        // ===== DISPLAY ARTICLES =====
+        function displayArticles(articles) {
+            const newsFeed = document.getElementById('newsFeed');
+            
+            if (!articles || articles.length === 0) {
+                newsFeed.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
+                return;
+            }
+            
+            newsFeed.innerHTML = articles.map(article => `
+                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                    <div class="news-image">
+                        <img src="${article.imageUrl}" alt="${article.title}" loading="lazy">
+                    </div>
+                    <div class="news-content">
+                        <span class="news-source">${article.source}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p>${article.description.substring(0, 100)}...</p>
+                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
 
         // ===== PAGE NAVIGATION =====
         function showSection(section) {
@@ -1184,7 +1428,7 @@
             // Load appropriate data
             switch(section) {
                 case 'home':
-                    loadNews();
+                    loadAllNews();
                     break;
                 case 'weather':
                     loadWeather();
@@ -1343,64 +1587,6 @@
             } catch (error) {
                 console.error("Error loading hurricane data:", error);
                 activeStorms.innerHTML = '<p>Unable to load current storm data. Please check back later.</p>';
-            }
-        }
-
-        // ===== LOAD NEWS FROM RSS FEED =====
-        async function loadNews() {
-            console.log("Loading news data from RSS...");
-            try {
-                // Use a proxy to bypass CORS (in production, set up your own proxy)
-                const proxyUrl = 'https://api.allorigins.win/get?url=';
-                const encodedUrl = encodeURIComponent(RSS_FEED_URL);
-                const response = await fetch(`${proxyUrl}${encodedUrl}`);
-                
-                if (!response.ok) throw new Error("RSS feed failed to load");
-                
-                const data = await response.json();
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(data.contents, "text/xml");
-                
-                const items = xmlDoc.querySelectorAll('item');
-                newsFeed.innerHTML = '';
-                
-                items.forEach(item => {
-                    const title = item.querySelector('title')?.textContent || 'No title';
-                    const description = item.querySelector('description')?.textContent || 'No description';
-                    const link = item.querySelector('link')?.textContent || '#';
-                    const pubDate = item.querySelector('pubDate')?.textContent || new Date().toISOString();
-                    const image = item.querySelector('enclosure')?.getAttribute('url') || 
-                                 item.querySelector('media\\:content, content')?.getAttribute('url') || 
-                                 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80';
-                    
-                    const article = {
-                        title,
-                        description,
-                        url: link,
-                        publishedAt: pubDate,
-                        urlToImage: image,
-                        source: "RSS Feed"
-                    };
-                    
-                    newsFeed.innerHTML += `
-                        <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
-                            <div class="news-image">
-                                <img src="${image}" alt="${title}">
-                            </div>
-                            <div class="news-content">
-                                <span class="news-source">RSS Feed</span>
-                                <h3 class="news-title">${title}</h3>
-                                <p>${description.substring(0, 100)}...</p>
-                                <p class="news-date">${new Date(pubDate).toLocaleDateString()}</p>
-                                <a href="${link}" target="_blank" class="news-link">Read More</a>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-            } catch (error) {
-                console.error("Error loading news from RSS:", error);
-                newsFeed.innerHTML = '<p>Error loading news feed. Please try again later.</p>';
             }
         }
 
@@ -1570,7 +1756,7 @@
             }
             
             // Always load news (whether logged in or not)
-            loadNews();
+            loadAllNews();
         });
 
         // ===== EVENT LISTENERS =====
@@ -1628,280 +1814,14 @@
             }
         });
 
+        // Refresh button handler
+        refreshBtn.addEventListener('click', loadAllNews);
+
         // Initialize the page
         document.addEventListener('DOMContentLoaded', () => {
             console.log("Page loaded");
             showSection('home');
-            
-            // Set up auth state listener
-            auth.onAuthStateChanged(user => {
-                if (user) {
-                    console.log("User is logged in:", user.email);
-                    loginBtn.style.display = 'none';
-                    userDropdown.style.display = 'block';
-                    userEmail.textContent = user.email;
-                } else {
-                    console.log("User is logged out");
-                    loginBtn.style.display = 'block';
-                    userDropdown.style.display = 'none';
-                }
-            });
         });
     </script>
-    <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KAUS News - Caribbean News Network</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* [PASTE ALL YOUR EXISTING CSS HERE - NO CHANGES NEEDED] */
-        
-        /* Add this new style for the refresh button */
-        .refresh-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            margin: 20px 0;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .refresh-btn:hover {
-            background: #004494;
-        }
-        
-        .refresh-btn .spinner {
-            display: none;
-            animation: spin 1s linear infinite;
-        }
-        
-        .refresh-btn.loading .spinner {
-            display: inline-block;
-        }
-        
-        .refresh-btn.loading .text {
-            display: none;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-    </style>
-</head>
-<body>
-    <!-- [YOUR EXISTING HTML REMAINS THE SAME UNTIL NEWS SECTION] -->
-    
-    <!-- MODIFY YOUR NEWS SECTION TO ADD REFRESH BUTTON -->
-    <section id="news">
-        <div class="container">
-            <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2><i class="fas fa-newspaper"></i> Latest News</h2>
-                <button id="refreshNews" class="refresh-btn">
-                    <i class="fas fa-sync-alt spinner"></i>
-                    <span class="text">Refresh News</span>
-                </button>
-            </div>
-            <div class="news-grid" id="newsFeed">
-                <!-- News articles will load here -->
-                <div class="loading-news">Loading Caribbean news...</div>
-            </div>
-        </div>
-    </section>
-
-    <!-- [THE REST OF YOUR HTML REMAINS THE SAME] -->
-
-    <script>
-        // ===== CARIBBEAN NEWS SOURCES =====
-        const CARIBBEAN_NEWS_SOURCES = [
-            // SKN Vibes (scraped)
-            {
-                name: "SKN Vibes",
-                url: "https://www.sknvibes.com/news/news.cfm",
-                type: "scrape",
-                selector: ".news-item h3 a",
-                baseUrl: "https://www.sknvibes.com"
-            },
-            
-            // RSS Feeds
-            {
-                name: "Caribbean News Global",
-                url: "https://caribbeannewsglobal.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Jamaica Observer",
-                url: "https://www.jamaicaobserver.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Nation News Barbados",
-                url: "https://nationnews.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Trinidad Express",
-                url: "https://trinidadexpress.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "St. Lucia Times",
-                url: "https://stluciatimes.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Antigua Observer",
-                url: "https://antiguaobserver.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Dominica News Online",
-                url: "https://dominicanewsonline.com/feed/",
-                type: "rss"
-            },
-            {
-                name: "Barbados Today",
-                url: "https://barbadostoday.bb/feed/",
-                type: "rss"
-            }
-        ];
-
-        // ===== NEWS LOADER =====
-        async function loadAllNews() {
-            console.log("Loading news from all Caribbean sources...");
-            const refreshBtn = document.getElementById('refreshNews');
-            refreshBtn.classList.add('loading');
-            
-            try {
-                const allArticles = [];
-                
-                // Load from each source in parallel
-                await Promise.all(CARIBBEAN_NEWS_SOURCES.map(async (source) => {
-                    try {
-                        let articles = [];
-                        
-                        if (source.type === "scrape") {
-                            articles = await scrapeNews(source);
-                        } else {
-                            articles = await fetchRSSFeed(source);
-                        }
-                        
-                        allArticles.push(...articles);
-                    } catch (error) {
-                        console.error(`Error loading ${source.name}:`, error);
-                    }
-                });
-                
-                // Sort by date and limit to 24 articles
-                const sortedArticles = allArticles
-                    .sort((a, b) => new Date(b.date) - new Date(a.date))
-                    .slice(0, 24);
-                
-                displayArticles(sortedArticles);
-                
-            } catch (error) {
-                console.error("Error loading news:", error);
-                document.getElementById('newsFeed').innerHTML = `
-                    <div class="error-news">
-                        <p>Error loading news. Please try refreshing.</p>
-                        <button onclick="loadAllNews()">Retry</button>
-                    </div>
-                `;
-            } finally {
-                refreshBtn.classList.remove('loading');
-            }
-        }
-
-        // ===== NEWS SCRAPER =====
-        async function scrapeNews(source) {
-            console.log(`Scraping ${source.name}...`);
-            const proxyUrl = "https://api.allorigins.win/get?url=";
-            const encodedUrl = encodeURIComponent(source.url);
-            const response = await fetch(`${proxyUrl}${encodedUrl}`);
-            
-            if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
-            
-            const data = await response.json();
-            const parser = new DOMParser();
-            const htmlDoc = parser.parseFromString(data.contents, "text/html");
-            
-            const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
-            
-            return articleLinks.slice(0, 6).map(link => ({
-                title: link.textContent.trim(),
-                url: `${source.baseUrl}${link.getAttribute('href')}`,
-                source: source.name,
-                date: new Date().toISOString(),
-                description: `Latest news from ${source.name}`,
-                imageUrl: source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
-            }));
-        }
-
-        // ===== RSS FETCHER =====
-        async function fetchRSSFeed(source) {
-            console.log(`Fetching RSS from ${source.name}...`);
-            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
-            const response = await fetch(rssProxy);
-            
-            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
-            
-            const data = await response.json();
-            return data.items.slice(0, 6).map(item => ({
-                title: item.title,
-                url: item.link,
-                source: source.name,
-                date: item.pubDate,
-                description: item.description || `Read more on ${source.name}`,
-                imageUrl: item.thumbnail || source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
-            }));
-        }
-
-        // ===== DISPLAY ARTICLES =====
-        function displayArticles(articles) {
-            const newsFeed = document.getElementById('newsFeed');
-            
-            if (!articles || articles.length === 0) {
-                newsFeed.innerHTML = '<p>No articles found. Please try again later.</p>';
-                return;
-            }
-            
-            newsFeed.innerHTML = articles.map(article => `
-                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
-                    <div class="news-image">
-                        <img src="${article.imageUrl}" alt="${article.title}" loading="lazy">
-                    </div>
-                    <div class="news-content">
-                        <span class="news-source">${article.source}</span>
-                        <h3 class="news-title">${article.title}</h3>
-                        <p>${article.description.substring(0, 100)}...</p>
-                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
-                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // ===== REFRESH BUTTON =====
-        document.getElementById('refreshNews').addEventListener('click', loadAllNews);
-
-        // ===== INITIAL LOAD =====
-        document.addEventListener('DOMContentLoaded', () => {
-            loadAllNews();
-            // [KEEP YOUR EXISTING DOMCONTENTLOADED CODE]
-        });
-
-        // [KEEP YOUR EXISTING showArticleDetail() FUNCTION]
-    </script>
-</body>
-</html>
 </body>
 </html>
