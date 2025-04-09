@@ -1823,5 +1823,204 @@
             showSection('home');
         });
     </script>
+    <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUS News - Caribbean News Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* [ALL YOUR EXISTING CSS REMAINS THE SAME] */
+        
+        /* Add these new styles at the end of your CSS */
+        
+        /* Improved mobile login button */
+        @media (max-width: 768px) {
+            .auth-section {
+                position: static;
+            }
+            
+            #loginBtn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            
+            #loginBtn .fa-user {
+                margin-right: 0;
+            }
+            
+            #loginBtn span {
+                display: none;
+            }
+            
+            .user-dropdown {
+                width: 180px;
+                right: 10px;
+                bottom: 80px;
+                top: auto;
+            }
+        }
+        
+        /* Fallback for broken images */
+        .news-image {
+            position: relative;
+        }
+        
+        .news-image img {
+            background-color: #f0f0f0;
+        }
+        
+        .news-image img.error {
+            visibility: hidden;
+        }
+        
+        .news-image .image-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #999;
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <!-- [YOUR EXISTING HTML STRUCTURE REMAINS THE SAME] -->
+
+    <script>
+        // ===== MODIFIED FUNCTIONS TO HANDLE IMAGE ERRORS =====
+        
+        // Update the displayArticles function to include image error handling
+        function displayArticles(articles) {
+            const newsFeed = document.getElementById('newsFeed');
+            
+            if (!articles || articles.length === 0) {
+                newsFeed.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
+                return;
+            }
+            
+            newsFeed.innerHTML = articles.map(article => `
+                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                    <div class="news-image">
+                        <img src="${article.imageUrl}" 
+                             alt="${article.title}" 
+                             loading="lazy"
+                             onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
+                        <div class="image-fallback" style="display: none;">
+                            ${article.source}<br>${article.title}
+                        </div>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-source">${article.source}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p>${article.description.substring(0, 100)}...</p>
+                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Update the showArticleDetail function to handle image errors
+        function showArticleDetail(article) {
+            // [Previous code remains the same until the image part]
+            
+            articleDetail.innerHTML = `
+                <div class="article-header">
+                    <span class="article-source">${article.source || "KAUS News"}</span>
+                    <span class="article-date">${new Date(article.publishedAt || article.date).toLocaleDateString()}</span>
+                    <h1 class="article-title">${article.title}</h1>
+                    <div class="article-meta">
+                        <span>By ${article.author || "KAUS Reporter"}</span>
+                    </div>
+                </div>
+                
+                <div style="position: relative; height: 400px;">
+                    <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                         alt="${article.title}" 
+                         class="article-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-fallback" style="display: none; height: 400px; font-size: 1.5rem;">
+                        ${article.source}<br>${article.title}
+                    </div>
+                </div>
+                
+                <div class="article-content">
+                    ${article.content ? article.content.replace(/\n/g, '<p>') : 
+                      `<p>${article.description || article.excerpt || 'No content available'}</p>`}
+                    
+                    ${article.url ? `<p><a href="${article.url}" target="_blank" class="btn btn-primary">Read Full Story on Original Site</a></p>` : ''}
+                </div>
+                
+                <a href="#" onclick="showSection('home'); return false;" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to News
+                </a>
+            `;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ===== MODIFIED RSS FETCHER TO IMPROVE IMAGE HANDLING =====
+        async function fetchRSSFeed(source) {
+            console.log(`Fetching RSS from ${source.name}...`);
+            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const response = await fetch(rssProxy);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
+            
+            const data = await response.json();
+            return data.items.slice(0, 6).map(item => {
+                // Improved image extraction
+                let imageUrl = item.thumbnail || source.image;
+                
+                // Try to extract image from content if not available
+                if (!imageUrl && item.content) {
+                    const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                    if (imgMatch) {
+                        imageUrl = imgMatch[1];
+                    }
+                }
+                
+                // Final fallback
+                if (!imageUrl) {
+                    imageUrl = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(source.name);
+                }
+                
+                return {
+                    title: item.title,
+                    url: item.link,
+                    source: source.name,
+                    date: item.pubDate,
+                    description: item.description || `Read more on ${source.name}`,
+                    imageUrl: imageUrl
+                };
+            });
+        }
+
+        // [REST OF YOUR JAVASCRIPT REMAINS THE SAME]
+    </script>
+</body>
+</html>
 </body>
 </html>
