@@ -17,6 +17,13 @@
             --text-light: #6c757d;
             --font-main: 'Montserrat', sans-serif;
             --font-heading: 'Playfair Display', serif;
+            
+            /* Dark mode variables */
+            --bg-dark: #121212;
+            --card-dark: #1e1e1e;
+            --text-dark: #e0e0e0;
+            --text-light-dark: #a0a0a0;
+            --border-dark: #333;
         }
         
         * {
@@ -30,6 +37,12 @@
             color: var(--text);
             background: var(--light);
             line-height: 1.6;
+            transition: background-color 0.3s, color 0.3s;
+        }
+        
+        body.dark-mode {
+            background-color: var(--bg-dark);
+            color: var(--text-dark);
         }
         
         h1, h2, h3, h4 {
@@ -71,6 +84,12 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode header {
+            background: var(--card-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .header-content {
@@ -90,9 +109,18 @@
             font-size: 0.9rem;
         }
         
+        body.dark-mode .logo p {
+            color: var(--text-light-dark);
+        }
+        
         /* ===== NAVIGATION ===== */
         nav {
             background: var(--dark);
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode nav {
+            background: #0a0a1a;
         }
         
         .nav-links {
@@ -146,9 +174,18 @@
             height: 100%;
         }
         
+        body.dark-mode .news-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
         .news-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        body.dark-mode .news-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
         }
         
         .news-image {
@@ -163,6 +200,10 @@
             object-fit: cover;
             transition: transform 0.3s ease;
             background-color: #f0f0f0;
+        }
+        
+        body.dark-mode .news-image img {
+            background-color: #333;
         }
         
         .news-image img.error {
@@ -183,6 +224,11 @@
             font-size: 1rem;
             text-align: center;
             padding: 10px;
+        }
+        
+        body.dark-mode .news-image .image-fallback {
+            background-color: #333;
+            color: #ccc;
         }
         
         .news-card:hover .news-image img {
@@ -209,6 +255,11 @@
         .news-title {
             font-size: 1.2rem;
             margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        body.dark-mode .news-title {
+            color: var(--text-dark);
         }
         
         .news-date {
@@ -216,6 +267,10 @@
             font-size: 0.8rem;
             margin-top: auto;
             padding-top: 10px;
+        }
+        
+        body.dark-mode .news-date {
+            color: var(--text-light-dark);
         }
         
         .news-link {
@@ -235,6 +290,11 @@
             background: #f0f8ff;
             padding: 30px 0;
             margin-bottom: 40px;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .local-news-section {
+            background: #0a1a2a;
         }
         
         .local-news-header {
@@ -259,6 +319,12 @@
             padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .article-detail {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .article-header {
@@ -268,6 +334,11 @@
         .article-title {
             font-size: 2rem;
             margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        body.dark-mode .article-title {
+            color: var(--text-dark);
         }
         
         .article-meta {
@@ -275,6 +346,10 @@
             align-items: center;
             margin-bottom: 20px;
             color: var(--text-light);
+        }
+        
+        body.dark-mode .article-meta {
+            color: var(--text-light-dark);
         }
         
         .article-source {
@@ -300,6 +375,11 @@
         
         .article-content {
             line-height: 1.8;
+            color: var(--text);
+        }
+        
+        body.dark-mode .article-content {
+            color: var(--text-dark);
         }
         
         .article-content p {
@@ -325,6 +405,12 @@
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .weather-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .weather-header {
@@ -337,6 +423,11 @@
         .weather-temp {
             font-size: 2rem;
             font-weight: bold;
+            color: var(--text);
+        }
+        
+        body.dark-mode .weather-temp {
+            color: var(--text-dark);
         }
         
         .weather-details {
@@ -369,6 +460,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .hurricane-alerts {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .hurricane-map-container {
@@ -376,6 +473,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .hurricane-map-container {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .storm-card {
@@ -384,6 +487,11 @@
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 4px;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .storm-card {
+            background: #252525;
         }
 
         .storm-name {
@@ -394,6 +502,11 @@
 
         .storm-details {
             font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        body.dark-mode .storm-details {
+            color: var(--text-dark);
         }
 
         .storm-details p {
@@ -405,6 +518,12 @@
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .hurricane-safety {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .safety-tips {
@@ -418,6 +537,11 @@
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .tip {
+            background: #252525;
         }
 
         .tip i {
@@ -428,11 +552,21 @@
 
         .tip h4 {
             margin-bottom: 10px;
+            color: var(--text);
+        }
+
+        body.dark-mode .tip h4 {
+            color: var(--text-dark);
         }
 
         .tip ul {
             margin-left: 20px;
             font-size: 0.9rem;
+            color: var(--text);
+        }
+
+        body.dark-mode .tip ul {
+            color: var(--text-dark);
         }
 
         .tip li {
@@ -444,6 +578,11 @@
             border-left: 4px solid var(--secondary);
             padding: 20px;
             margin-top: 30px;
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .emergency-contacts {
+            background: #2a1e1e;
         }
 
         .emergency-contacts ul {
@@ -455,6 +594,11 @@
             margin-bottom: 10px;
             padding-left: 20px;
             position: relative;
+            color: var(--text);
+        }
+
+        body.dark-mode .emergency-contacts li {
+            color: var(--text-dark);
         }
 
         .emergency-contacts li:before {
@@ -478,6 +622,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .events-section {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .event-card {
@@ -485,6 +635,10 @@
             margin-bottom: 20px;
             padding-bottom: 20px;
             border-bottom: 1px solid #eee;
+        }
+        
+        body.dark-mode .event-card {
+            border-bottom: 1px solid var(--border-dark);
         }
         
         .event-date {
@@ -515,11 +669,20 @@
         .event-title {
             font-weight: bold;
             margin-bottom: 5px;
+            color: var(--text);
+        }
+        
+        body.dark-mode .event-title {
+            color: var(--text-dark);
         }
         
         .event-location {
             color: var(--text-light);
             font-size: 0.9rem;
+        }
+        
+        body.dark-mode .event-location {
+            color: var(--text-light-dark);
         }
         
         /* ===== ABOUT/CONTACT PAGES ===== */
@@ -528,6 +691,12 @@
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .page-content {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .contact-form .form-group {
@@ -538,6 +707,11 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--text);
+        }
+        
+        body.dark-mode .contact-form label {
+            color: var(--text-dark);
         }
         
         .contact-form input,
@@ -547,6 +721,16 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: var(--font-main);
+            background: white;
+            color: var(--text);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark-mode .contact-form input,
+        body.dark-mode .contact-form textarea {
+            background: #333;
+            border-color: #555;
+            color: var(--text-dark);
         }
         
         .contact-form textarea {
@@ -568,6 +752,12 @@
             padding: 15px;
             width: 200px;
             display: none;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .user-dropdown {
+            background: var(--card-dark);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
         
         .user-dropdown.show {
@@ -600,11 +790,21 @@
             padding: 30px;
             border-radius: 8px;
             box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .login-form {
+            background: var(--card-dark);
         }
         
         .login-form h2 {
             margin-bottom: 20px;
             text-align: center;
+            color: var(--text);
+        }
+        
+        body.dark-mode .login-form h2 {
+            color: var(--text-dark);
         }
         
         .form-group {
@@ -615,6 +815,11 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 600;
+            color: var(--text);
+        }
+        
+        body.dark-mode .form-group label {
+            color: var(--text-dark);
         }
         
         .form-group input {
@@ -623,6 +828,15 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: var(--font-main);
+            background: white;
+            color: var(--text);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark-mode .form-group input {
+            background: #333;
+            border-color: #555;
+            color: var(--text-dark);
         }
         
         .form-actions {
@@ -643,11 +857,22 @@
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             max-width: 800px;
             margin: 0 auto;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .dashboard-form {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .dashboard-form h2 {
             margin-bottom: 30px;
             text-align: center;
+            color: var(--text);
+        }
+        
+        body.dark-mode .dashboard-form h2 {
+            color: var(--text-dark);
         }
         
         .form-row {
@@ -667,6 +892,15 @@
             border: 1px solid #ddd;
             border-radius: 4px;
             font-family: var(--font-main);
+            background: white;
+            color: var(--text);
+            transition: background-color 0.3s, border-color 0.3s;
+        }
+        
+        body.dark-mode textarea {
+            background: #333;
+            border-color: #555;
+            color: var(--text-dark);
         }
         
         .image-upload {
@@ -694,6 +928,11 @@
             color: white;
             padding: 30px 0;
             margin-top: 50px;
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode footer {
+            background: #0a0a1a;
         }
         
         .footer-content {
@@ -806,6 +1045,11 @@
             text-align: center;
             padding: 40px;
             font-size: 1.2rem;
+            color: var(--text);
+        }
+        
+        body.dark-mode .loading-news {
+            color: var(--text-dark);
         }
         
         .error-news {
@@ -851,6 +1095,112 @@
                 bottom: 80px;
                 top: auto;
             }
+        }
+        
+        /* ===== DARK MODE TOGGLE ===== */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            background: #004494;
+        }
+        
+        /* ===== WEATHER FORECAST STYLES ===== */
+        .forecast-container {
+            margin-top: 30px;
+        }
+        
+        .forecast-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .forecast-days {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+        }
+        
+        .forecast-day {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+        
+        body.dark-mode .forecast-day {
+            background: var(--card-dark);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .forecast-date {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        body.dark-mode .forecast-date {
+            color: var(--text-dark);
+        }
+        
+        .forecast-icon {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+        
+        .forecast-temp {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+        }
+        
+        .forecast-high {
+            font-weight: bold;
+            color: var(--text);
+        }
+        
+        body.dark-mode .forecast-high {
+            color: var(--text-dark);
+        }
+        
+        .forecast-low {
+            color: var(--text-light);
+        }
+        
+        body.dark-mode .forecast-low {
+            color: var(--text-light-dark);
+        }
+        
+        /* ===== EVENT DETAILS STYLES ===== */
+        .event-detail {
+            margin-top: 10px;
+            color: var(--text);
+            font-size: 0.9rem;
+        }
+        
+        body.dark-mode .event-detail {
+            color: var(--text-dark);
         }
     </style>
 </head>
@@ -1038,6 +1388,16 @@
                         <p id="weather-uv">--</p>
                     </div>
                 </div>
+                
+                <!-- 3-Day Forecast -->
+                <div class="forecast-container">
+                    <div class="forecast-header">
+                        <h3>3-Day Forecast</h3>
+                    </div>
+                    <div class="forecast-days" id="weatherForecast">
+                        <!-- Forecast will be loaded here -->
+                    </div>
+                </div>
             </div>
             
             <h3 style="margin-top: 40px;">Other Islands</h3>
@@ -1214,6 +1574,11 @@
         </div>
     </div>
     
+    <!-- DARK MODE TOGGLE -->
+    <button id="darkModeToggle" class="dark-mode-toggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
     <!-- FOOTER -->
     <footer>
         <div class="container">
@@ -1265,9 +1630,10 @@
                 name: "SKN Vibes",
                 url: "https://www.sknvibes.com/news/news.cfm",
                 type: "scrape",
-                selector: ".news-item h3 a",
+                selector: ".news-item",
                 baseUrl: "https://www.sknvibes.com",
-                image: "https://www.sknvibes.com/images/logo.png"
+                image: "https://www.sknvibes.com/images/logo.png",
+                scrapeFunction: scrapeSKNVibes
             },
             
             // RSS Feeds
@@ -1334,6 +1700,7 @@
         // ===== API CONFIGURATION =====
         const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
         const HURRICANE_API_URL = "https://www.nhc.noaa.gov/gtwo.xml";
+        const EVENT_API_URL = "https://www.caribbean-events.com/api/events";
 
         // ===== FIREBASE CONFIG =====
         const firebaseConfig = {
@@ -1353,7 +1720,7 @@
 
         // ===== WEATHER API =====
         const WEATHER_API = (city) => 
-            `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
+            `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=3&aqi=no&alerts=no`;
 
         // Caribbean capitals for weather
         const CARIBBEAN_CAPITALS = [
@@ -1387,6 +1754,8 @@
         const contactForm = document.getElementById('contactForm');
         const activeStorms = document.getElementById('active-storms');
         const refreshBtn = document.getElementById('refreshNews');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const weatherForecast = document.getElementById('weatherForecast');
         
         // Weather elements
         const weatherDesc = document.getElementById('weather-desc');
@@ -1394,6 +1763,79 @@
         const weatherWind = document.getElementById('weather-wind');
         const weatherHumidity = document.getElementById('weather-humidity');
         const weatherUv = document.getElementById('weather-uv');
+
+        // ===== DARK MODE TOGGLE =====
+        darkModeToggle.addEventListener('click', () => {
+            document.body.classList.toggle('dark-mode');
+            
+            // Update icon
+            const icon = darkModeToggle.querySelector('i');
+            if (document.body.classList.contains('dark-mode')) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+                localStorage.setItem('darkMode', 'enabled');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+                localStorage.setItem('darkMode', 'disabled');
+            }
+        });
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'enabled') {
+            document.body.classList.add('dark-mode');
+            darkModeToggle.querySelector('i').classList.remove('fa-moon');
+            darkModeToggle.querySelector('i').classList.add('fa-sun');
+        }
+
+        // ===== SKN VIBES SCRAPER =====
+        async function scrapeSKNVibes(source) {
+            console.log("Scraping SKN Vibes...");
+            try {
+                const proxyUrl = "https://api.allorigins.win/get?url=";
+                const encodedUrl = encodeURIComponent(source.url);
+                const response = await fetch(`${proxyUrl}${encodedUrl}`);
+                
+                if (!response.ok) throw new Error("Failed to fetch SKN Vibes");
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data.contents, "text/html");
+                
+                const articles = [];
+                const newsItems = htmlDoc.querySelectorAll(source.selector);
+                
+                for (let i = 0; i < Math.min(newsItems.length, 6); i++) {
+                    const item = newsItems[i];
+                    const titleElement = item.querySelector('h3 a');
+                    const dateElement = item.querySelector('.news-date');
+                    const summaryElement = item.querySelector('p');
+                    const imageElement = item.querySelector('img');
+                    
+                    if (titleElement) {
+                        const title = titleElement.textContent.trim();
+                        const url = `${source.baseUrl}${titleElement.getAttribute('href')}`;
+                        const date = dateElement ? dateElement.textContent.trim() : new Date().toISOString();
+                        const description = summaryElement ? summaryElement.textContent.trim() : `Latest news from ${source.name}`;
+                        const imageUrl = imageElement ? imageElement.getAttribute('src') : source.image;
+                        
+                        articles.push({
+                            title,
+                            url,
+                            source: source.name,
+                            date,
+                            description,
+                            imageUrl: imageUrl ? `${source.baseUrl}${imageUrl}` : source.image
+                        });
+                    }
+                }
+                
+                return articles;
+            } catch (error) {
+                console.error("Error scraping SKN Vibes:", error);
+                return [];
+            }
+        }
 
         // ===== NEWS LOADING FUNCTIONS =====
         async function loadAllNews() {
@@ -1409,10 +1851,12 @@
                     try {
                         let articles = [];
                         
-                        if (source.type === "scrape") {
-                            articles = await scrapeNews(source);
-                        } else {
+                        if (source.type === "scrape" && source.scrapeFunction) {
+                            articles = await source.scrapeFunction(source);
+                        } else if (source.type === "rss") {
                             articles = await fetchRSSFeed(source);
+                        } else {
+                            articles = await scrapeNews(source);
                         }
                         
                         allArticles.push(...articles);
@@ -1722,16 +2166,39 @@
         async function loadWeather() {
             console.log("Loading weather data...");
             try {
-                // Load St. Kitts weather
+                // Load St. Kitts weather with forecast
                 const response = await fetch(WEATHER_API("Basseterre"));
                 if (!response.ok) throw new Error("Weather API failed");
                 const data = await response.json();
                 
+                // Current weather
                 weatherDesc.textContent = data.current.condition.text;
                 weatherTemp.textContent = `${data.current.temp_c}°C`;
                 weatherWind.textContent = `${data.current.wind_kph} km/h`;
                 weatherHumidity.textContent = `${data.current.humidity}%`;
                 weatherUv.textContent = data.current.uv;
+                
+                // 3-Day Forecast
+                weatherForecast.innerHTML = '';
+                for (let i = 0; i < 3; i++) {
+                    const day = data.forecast.forecastday[i];
+                    const date = new Date(day.date);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    
+                    weatherForecast.innerHTML += `
+                        <div class="forecast-day">
+                            <div class="forecast-date">${dayName}</div>
+                            <div class="forecast-icon">
+                                <img src="https:${day.day.condition.icon}" alt="${day.day.condition.text}">
+                            </div>
+                            <div class="forecast-temp">
+                                <span class="forecast-high">${day.day.maxtemp_c}°</span>
+                                <span class="forecast-low">${day.day.mintemp_c}°</span>
+                            </div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;">${day.day.condition.text}</div>
+                        </div>
+                    `;
+                }
                 
                 // Load other islands weather
                 const weatherGrid = document.getElementById('weather-grid');
@@ -1776,6 +2243,7 @@
                 weatherWind.textContent = "-- km/h";
                 weatherHumidity.textContent = "--%";
                 weatherUv.textContent = "--";
+                weatherForecast.innerHTML = '<p>Forecast data unavailable</p>';
             }
         }
 
@@ -1835,6 +2303,119 @@
             }
         }
 
+        // ===== LOAD EVENTS =====
+        async function loadEvents() {
+            console.log("Loading events data...");
+            try {
+                // First try to load from Firestore
+                const querySnapshot = await db.collection("events").orderBy("date").limit(10).get();
+                
+                if (!querySnapshot.empty) {
+                    displayEventsFromFirestore(querySnapshot);
+                    return;
+                }
+                
+                // If no events in Firestore, try to fetch from API
+                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent('https://www.caribbean-events.com/events'));
+                if (!response.ok) throw new Error("Failed to fetch events");
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data.contents, "text/html");
+                
+                // Parse events from the HTML
+                const eventElements = htmlDoc.querySelectorAll('.event-item');
+                const events = [];
+                
+                for (let i = 0; i < Math.min(eventElements.length, 10); i++) {
+                    const event = eventElements[i];
+                    const titleElement = event.querySelector('.event-title');
+                    const dateElement = event.querySelector('.event-date');
+                    const locationElement = event.querySelector('.event-location');
+                    const descriptionElement = event.querySelector('.event-description');
+                    
+                    if (titleElement) {
+                        const title = titleElement.textContent.trim();
+                        const dateText = dateElement ? dateElement.textContent.trim() : '';
+                        const location = locationElement ? locationElement.textContent.trim() : 'Caribbean';
+                        const description = descriptionElement ? descriptionElement.textContent.trim() : '';
+                        
+                        // Parse date (this is a simple example, you might need to adjust based on actual date format)
+                        let eventDate = new Date();
+                        if (dateText) {
+                            // Try to extract date parts (this is a simplified approach)
+                            const dateMatch = dateText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+                            if (dateMatch) {
+                                eventDate = new Date(`${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`);
+                            }
+                        }
+                        
+                        events.push({
+                            title,
+                            date: eventDate.toISOString(),
+                            location,
+                            description
+                        });
+                    }
+                }
+                
+                if (events.length > 0) {
+                    displayEvents(events);
+                } else {
+                    eventsFeed.innerHTML = '<p>No upcoming events found. Please check back later.</p>';
+                }
+                
+            } catch (error) {
+                console.error("Error loading events:", error);
+                eventsFeed.innerHTML = '<p>Error loading events. Please try again later.</p>';
+            }
+        }
+
+        function displayEventsFromFirestore(querySnapshot) {
+            eventsFeed.innerHTML = '';
+            
+            querySnapshot.forEach(doc => {
+                const event = doc.data();
+                const eventDate = new Date(event.date);
+                
+                eventsFeed.innerHTML += `
+                    <div class="event-card">
+                        <div class="event-date">
+                            <div class="event-day">${eventDate.getDate()}</div>
+                            <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
+                            <div class="event-detail">${event.description}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
+        function displayEvents(events) {
+            eventsFeed.innerHTML = '';
+            
+            events.forEach(event => {
+                const eventDate = new Date(event.date);
+                
+                eventsFeed.innerHTML += `
+                    <div class="event-card">
+                        <div class="event-date">
+                            <div class="event-day">${eventDate.getDate()}</div>
+                            <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
+                        </div>
+                        <div class="event-details">
+                            <div class="event-title">${event.title}</div>
+                            <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
+                            <div class="event-detail">${event.description}</div>
+                        </div>
+                    </div>
+                `;
+            });
+        }
+
         // ===== LOAD REPORTER'S NEWS =====
         async function loadReporterNews() {
             console.log("Loading reporter's news...");
@@ -1875,45 +2456,6 @@
             } catch (error) {
                 console.error("Error loading reporter's news:", error);
                 reporterNewsFeed.innerHTML = '<p>Error loading articles. Please try again later.</p>';
-            }
-        }
-
-        // ===== LOAD EVENTS =====
-        async function loadEvents() {
-            console.log("Loading events data...");
-            try {
-                // Load from Firestore
-                const querySnapshot = await db.collection("events").orderBy("date").limit(10).get();
-                
-                if (querySnapshot.empty) {
-                    eventsFeed.innerHTML = '<p>No upcoming events scheduled.</p>';
-                    return;
-                }
-                
-                eventsFeed.innerHTML = '';
-                
-                querySnapshot.forEach(doc => {
-                    const event = doc.data();
-                    const eventDate = new Date(event.date);
-                    
-                    eventsFeed.innerHTML += `
-                        <div class="event-card">
-                            <div class="event-date">
-                                <div class="event-day">${eventDate.getDate()}</div>
-                                <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
-                            </div>
-                            <div class="event-details">
-                                <div class="event-title">${event.title}</div>
-                                <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
-                                <p>${event.description}</p>
-                            </div>
-                        </div>
-                    `;
-                });
-                
-            } catch (error) {
-                console.error("Error loading events:", error);
-                eventsFeed.innerHTML = '<p>Error loading events. Please try again later.</p>';
             }
         }
 
