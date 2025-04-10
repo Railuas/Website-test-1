@@ -2507,6 +2507,16 @@ navLinks.forEach(link => {
     });
 });
 
-    </script>
+    <script>
+    // Fix: connect nav clicks to section switching
+    document.querySelectorAll('.nav-links a').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            const section = this.dataset.section;
+            if (section) showSection(section);
+        });
+    });
+</script>
+</script>
 </body>
 </html>
