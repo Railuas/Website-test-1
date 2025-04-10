@@ -1253,6 +1253,67 @@
         .ticket-btn:hover {
             background: #c1121f;
         }
+
+        /* ===== EVENT DETAIL PAGE ===== */
+        .event-detail-page {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: background-color 0.3s;
+        }
+
+        body.dark-mode .event-detail-page {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .event-detail-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+
+        .event-detail-content {
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        body.dark-mode .event-detail-content {
+            color: var(--text-dark);
+        }
+
+        .event-detail-section {
+            margin-bottom: 30px;
+        }
+
+        .event-detail-section h3 {
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        .event-detail-section p {
+            margin-bottom: 15px;
+        }
+
+        .event-detail-section ul {
+            margin-left: 20px;
+            margin-bottom: 15px;
+        }
+
+        .event-detail-section li {
+            margin-bottom: 8px;
+        }
+
+        .event-map {
+            width: 100%;
+            height: 300px;
+            border: none;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
@@ -1347,6 +1408,13 @@
         <section id="article-section" class="container" style="display:none;">
             <div class="article-detail" id="articleDetail">
                 <!-- Article content will load here -->
+            </div>
+        </section>
+        
+        <!-- EVENT DETAIL SECTION -->
+        <section id="event-detail-section" class="container" style="display:none;">
+            <div class="event-detail-page" id="eventDetail">
+                <!-- Event content will load here -->
             </div>
         </section>
         
@@ -1752,7 +1820,7 @@
         const EVENT_SOURCES = [
             {
                 name: "Caribbean Events",
-                url: "https://caribbeanevents.com/event/",
+                url: "https://caribbeanevents.com/events/",
                 type: "scrape",
                 baseUrl: "https://caribbeanevents.com",
                 image: "https://caribbeanevents.com/wp-content/uploads/2021/01/caribbean-events-logo.png",
@@ -1816,6 +1884,7 @@
         const reporterNewsFeed = document.getElementById('reporterNewsFeed');
         const reporterNewsSection = document.getElementById('reporter-news');
         const articleDetail = document.getElementById('articleDetail');
+        const eventDetail = document.getElementById('eventDetail');
         const dashboard = document.getElementById('dashboard');
         const articleForm = document.getElementById('articleForm');
         const articleImage = document.getElementById('articleImage');
@@ -1953,6 +2022,31 @@
                             }
                         }
                         
+                        // Fetch event details to get more information
+                        let eventDetails = {};
+                        try {
+                            const eventResponse = await fetch(`${proxyUrl}${encodeURIComponent(url)}`);
+                            if (eventResponse.ok) {
+                                const eventData = await eventResponse.json();
+                                const eventParser = new DOMParser();
+                                const eventHtml = eventParser.parseFromString(eventData.contents, "text/html");
+                                
+                                // Extract additional details
+                                const detailsElement = eventHtml.querySelector('.event-details');
+                                const directionsElement = eventHtml.querySelector('.event-directions');
+                                const ticketInfoElement = eventHtml.querySelector('.ticket-info');
+                                
+                                eventDetails = {
+                                    details: detailsElement ? detailsElement.innerHTML : description,
+                                    directions: directionsElement ? directionsElement.innerHTML : '',
+                                    ticketInfo: ticketInfoElement ? ticketInfoElement.innerHTML : '',
+                                    fullImageUrl: eventHtml.querySelector('.event-featured-image img')?.getAttribute('src') || imageUrl
+                                };
+                            }
+                        } catch (error) {
+                            console.error("Error fetching event details:", error);
+                        }
+                        
                         events.push({
                             title,
                             url,
@@ -1960,8 +2054,11 @@
                             date: eventDate.toISOString(),
                             description,
                             location,
-                            imageUrl: imageUrl ? `${source.baseUrl}${imageUrl}` : source.image,
+                            imageUrl: eventDetails.fullImageUrl ? `${source.baseUrl}${eventDetails.fullImageUrl}` : (imageUrl ? `${source.baseUrl}${imageUrl}` : source.image),
                             ticketUrl,
+                            details: eventDetails.details,
+                            directions: eventDetails.directions,
+                            ticketInfo: eventDetails.ticketInfo,
                             type: 'event'
                         });
                     }
@@ -2019,6 +2116,31 @@
                             }
                         }
                         
+                        // Fetch event details to get more information
+                        let eventDetails = {};
+                        try {
+                            const eventResponse = await fetch(`${proxyUrl}${encodeURIComponent(url)}`);
+                            if (eventResponse.ok) {
+                                const eventData = await eventResponse.json();
+                                const eventParser = new DOMParser();
+                                const eventHtml = eventParser.parseFromString(eventData.contents, "text/html");
+                                
+                                // Extract additional details
+                                const detailsElement = eventHtml.querySelector('.event-content');
+                                const directionsElement = eventHtml.querySelector('.event-venue-info');
+                                const ticketInfoElement = eventHtml.querySelector('.ticket-prices');
+                                
+                                eventDetails = {
+                                    details: detailsElement ? detailsElement.innerHTML : description,
+                                    directions: directionsElement ? directionsElement.innerHTML : '',
+                                    ticketInfo: ticketInfoElement ? ticketInfoElement.innerHTML : '',
+                                    fullImageUrl: eventHtml.querySelector('.event-header-image img')?.getAttribute('src') || imageUrl
+                                };
+                            }
+                        } catch (error) {
+                            console.error("Error fetching event details:", error);
+                        }
+                        
                         events.push({
                             title,
                             url,
@@ -2026,8 +2148,11 @@
                             date: eventDate.toISOString(),
                             description,
                             location,
-                            imageUrl: imageUrl ? `${source.baseUrl}${imageUrl}` : source.image,
+                            imageUrl: eventDetails.fullImageUrl ? `${source.baseUrl}${eventDetails.fullImageUrl}` : (imageUrl ? `${source.baseUrl}${imageUrl}` : source.image),
                             ticketUrl,
+                            details: eventDetails.details,
+                            directions: eventDetails.directions,
+                            ticketInfo: eventDetails.ticketInfo,
                             type: 'event'
                         });
                     }
@@ -2038,6 +2163,93 @@
                 console.error("Error scraping St. Kitts Music Festival:", error);
                 return [];
             }
+        }
+
+        // ===== SHOW EVENT DETAIL =====
+        function showEventDetail(event) {
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('article-section').style.display = 'none';
+            document.getElementById('event-detail-section').style.display = 'block';
+            document.getElementById('about-section').style.display = 'none';
+            document.getElementById('contact-section').style.display = 'none';
+            document.getElementById('weather-section').style.display = 'none';
+            document.getElementById('hurricane-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
+            
+            // Populate event detail
+            eventDetail.innerHTML = `
+                <div class="article-header">
+                    <span class="article-source">${event.source || "KAUS Events"}</span>
+                    <span class="article-date">${new Date(event.date).toLocaleDateString('en-US', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    })}</span>
+                    <h1 class="article-title">${event.title}</h1>
+                    <div class="article-meta">
+                        <span><i class="fas fa-map-marker-alt"></i> ${event.location}</span>
+                    </div>
+                </div>
+                
+                <div style="position: relative; height: 400px;">
+                    <img src="${event.imageUrl || 'https://images.unsplash.com/photo-1540575467063-178a50c2df87?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                         alt="${event.title}" 
+                         class="article-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-fallback" style="display: none; height: 400px; font-size: 1.5rem;">
+                        ${event.source}<br>${event.title}
+                    </div>
+                </div>
+                
+                <div class="event-detail-content">
+                    <div class="event-detail-section">
+                        <h3>Event Details</h3>
+                        ${event.details || `<p>${event.description || 'No details available'}</p>`}
+                    </div>
+                    
+                    <div class="event-detail-section">
+                        <h3>Location & Directions</h3>
+                        ${event.directions || '<p>Location details not available</p>'}
+                        ${event.location ? `
+                            <iframe 
+                                class="event-map"
+                                frameborder="0"
+                                src="https://www.google.com/maps/embed/v1/place?key=AIzaSyCq35jwp6_LYZgfx1o84MXzv8BfYerVcj0&q=${encodeURIComponent(event.location)}"
+                                allowfullscreen>
+                            </iframe>
+                        ` : ''}
+                    </div>
+                    
+                    <div class="event-detail-section">
+                        <h3>Tickets & Pricing</h3>
+                        ${event.ticketInfo || '<p>Ticket information not available</p>'}
+                        ${event.ticketUrl ? `
+                            <p>
+                                <a href="${event.ticketUrl}" target="_blank" class="btn btn-primary">
+                                    <i class="fas fa-ticket-alt"></i> Buy Tickets
+                                </a>
+                            </p>
+                        ` : ''}
+                    </div>
+                    
+                    ${event.url ? `
+                        <p>
+                            <a href="${event.url}" target="_blank" class="btn btn-primary">
+                                View Event on Original Site
+                            </a>
+                        </p>
+                    ` : ''}
+                </div>
+                
+                <a href="#" onclick="showSection('events'); return false;" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to Events
+                </a>
+            `;
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
         }
 
         // ===== NEWS LOADING FUNCTIONS =====
@@ -2284,6 +2496,7 @@
             // Hide all sections
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('article-section').style.display = 'none';
+            document.getElementById('event-detail-section').style.display = 'none';
             document.getElementById('about-section').style.display = 'none';
             document.getElementById('contact-section').style.display = 'none';
             document.getElementById('weather-section').style.display = 'none';
@@ -2322,6 +2535,7 @@
             // Hide all sections
             document.getElementById('home-section').style.display = 'none';
             document.getElementById('article-section').style.display = 'block';
+            document.getElementById('event-detail-section').style.display = 'none';
             document.getElementById('about-section').style.display = 'none';
             document.getElementById('contact-section').style.display = 'none';
             document.getElementById('weather-section').style.display = 'none';
@@ -2583,7 +2797,7 @@
                 const eventDate = new Date(event.date);
                 
                 eventsFeed.innerHTML += `
-                    <div class="event-card">
+                    <div class="event-card" onclick="showEventDetail(${JSON.stringify(event).replace(/"/g, '&quot;')})">
                         <div class="event-date">
                             <div class="event-day">${eventDate.getDate()}</div>
                             <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
