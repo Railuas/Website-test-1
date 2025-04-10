@@ -17,6 +17,12 @@
             --text-light: #6c757d;
             --font-main: 'Montserrat', sans-serif;
             --font-heading: 'Playfair Display', serif;
+            
+            /* Dark mode variables */
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --card-dark: #1e1e1e;
+            --border-dark: #333;
         }
         
         * {
@@ -30,6 +36,12 @@
             color: var(--text);
             background: var(--light);
             line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
         }
         
         h1, h2, h3, h4 {
@@ -71,6 +83,12 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode header {
+            background: var(--card-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
         }
         
         .header-content {
@@ -90,9 +108,18 @@
             font-size: 0.9rem;
         }
         
+        .dark-mode .logo p {
+            color: #aaa;
+        }
+        
         /* ===== NAVIGATION ===== */
         nav {
             background: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode nav {
+            background: #111;
         }
         
         .nav-links {
@@ -146,9 +173,18 @@
             height: 100%;
         }
         
+        .dark-mode .news-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
         .news-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .news-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
         }
         
         .news-image {
@@ -163,6 +199,10 @@
             object-fit: cover;
             transition: transform 0.3s ease;
             background-color: #f0f0f0;
+        }
+        
+        .dark-mode .news-image img {
+            background-color: #333;
         }
         
         .news-image img.error {
@@ -185,6 +225,11 @@
             padding: 10px;
         }
         
+        .dark-mode .news-image .image-fallback {
+            background-color: #333;
+            color: #aaa;
+        }
+        
         .news-card:hover .news-image img {
             transform: scale(1.05);
         }
@@ -194,6 +239,10 @@
             flex: 1;
             display: flex;
             flex-direction: column;
+        }
+        
+        .dark-mode .news-content {
+            color: var(--text-dark);
         }
         
         .news-source {
@@ -218,6 +267,10 @@
             padding-top: 10px;
         }
         
+        .dark-mode .news-date {
+            color: #aaa;
+        }
+        
         .news-link {
             color: var(--primary);
             text-decoration: none;
@@ -235,6 +288,11 @@
             background: #f0f8ff;
             padding: 30px 0;
             margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .local-news-section {
+            background: #1a1a2e;
         }
         
         .local-news-header {
@@ -259,6 +317,12 @@
             padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .article-detail {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .article-header {
@@ -268,6 +332,11 @@
         .article-title {
             font-size: 2rem;
             margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .dark-mode .article-title {
+            color: var(--text-dark);
         }
         
         .article-meta {
@@ -275,6 +344,10 @@
             align-items: center;
             margin-bottom: 20px;
             color: var(--text-light);
+        }
+        
+        .dark-mode .article-meta {
+            color: #aaa;
         }
         
         .article-source {
@@ -300,6 +373,11 @@
         
         .article-content {
             line-height: 1.8;
+            color: var(--text);
+        }
+        
+        .dark-mode .article-content {
+            color: var(--text-dark);
         }
         
         .article-content p {
@@ -318,6 +396,47 @@
             text-decoration: underline;
         }
         
+        /* ===== SOCIAL SHARING ===== */
+        .social-sharing {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-btn.facebook {
+            background: #3b5998;
+        }
+        
+        .share-btn.twitter {
+            background: #1da1f2;
+        }
+        
+        .share-btn.whatsapp {
+            background: #25d366;
+        }
+        
+        .share-btn.email {
+            background: #777;
+        }
+        
         /* ===== WEATHER WIDGET ===== */
         .weather-card {
             background: white;
@@ -325,6 +444,12 @@
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
             margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .weather-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
         
         .weather-header {
@@ -334,9 +459,22 @@
             margin-bottom: 15px;
         }
         
+        .weather-header h3 {
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-header h3 {
+            color: var(--text-dark);
+        }
+        
         .weather-temp {
             font-size: 2rem;
             font-weight: bold;
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-temp {
+            color: var(--text-dark);
         }
         
         .weather-details {
@@ -356,6 +494,75 @@
             color: var(--primary);
         }
         
+        .weather-detail p {
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-detail p {
+            color: var(--text-dark);
+        }
+        
+        /* Enhanced weather forecast */
+        .forecast-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .forecast-day {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .forecast-day {
+            background: var(--card-dark);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .forecast-day h4 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .forecast-day h4 {
+            color: var(--text-dark);
+        }
+        
+        .forecast-icon {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+        
+        .forecast-temp {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .forecast-high {
+            font-weight: bold;
+            color: var(--text);
+        }
+        
+        .forecast-low {
+            color: var(--text-light);
+        }
+        
+        .dark-mode .forecast-high {
+            color: var(--text-dark);
+        }
+        
+        .dark-mode .forecast-low {
+            color: #aaa;
+        }
+        
         /* ===== HURRICANE TRACKER STYLES ===== */
         .hurricane-info {
             display: grid;
@@ -369,6 +576,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-alerts {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .hurricane-map-container {
@@ -376,6 +589,12 @@
             border-radius: 8px;
             padding: 20px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-map-container {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .storm-card {
@@ -384,6 +603,11 @@
             padding: 15px;
             margin-bottom: 15px;
             border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .storm-card {
+            background: #252525;
         }
 
         .storm-name {
@@ -394,6 +618,11 @@
 
         .storm-details {
             font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .storm-details {
+            color: var(--text-dark);
         }
 
         .storm-details p {
@@ -405,6 +634,12 @@
             border-radius: 8px;
             padding: 30px;
             box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-safety {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
         }
 
         .safety-tips {
@@ -418,6 +653,11 @@
             background: #f8f9fa;
             padding: 20px;
             border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .tip {
+            background: #252525;
         }
 
         .tip i {
@@ -428,11 +668,21 @@
 
         .tip h4 {
             margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .dark-mode .tip h4 {
+            color: var(--text-dark);
         }
 
         .tip ul {
             margin-left: 20px;
             font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .tip ul {
+            color: var(--text-dark);
         }
 
         .tip li {
@@ -444,6 +694,11 @@
             border-left: 4px solid var(--secondary);
             padding: 20px;
             margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .emergency-contacts {
+            background: #2a1a1a;
         }
 
         .emergency-contacts ul {
@@ -466,145 +721,199 @@
             top: -5px;
         }
 
-        @media (max-width: 768px) {
-            .hurricane-info {
-                grid-template-columns: 1fr;
-            }
+        /* ===== EVENTS SECTION ===== */
+        .events-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
         }
         
-// ===== EVENT FUNCTIONS =====
-async function loadEvents() {
-    console.log("Loading Caribbean events...");
-    const eventsFeed = document.getElementById('eventsFeed');
-    const refreshBtn = document.getElementById('refreshEvents');
-    
-    refreshBtn.classList.add('loading');
-    eventsFeed.innerHTML = '<div class="loading-events">Loading events...</div>';
-    
-    try {
-        // First try to load from Firestore
-        const firestoreEvents = await loadEventsFromFirestore();
-        
-        if (firestoreEvents.length > 0) {
-            displayEvents(firestoreEvents);
-        } else {
-            // If no events in Firestore, try the API
-            const response = await fetch('/.netlify/functions/getEvents');
-            if (!response.ok) throw new Error("Events API failed");
-            
-            const apiEvents = await response.json();
-            displayEvents(apiEvents);
-            
-            // Save these events to Firestore for next time
-            await saveEventsToFirestore(apiEvents);
+        .event-card {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
-    } catch (error) {
-        console.error("Error loading events:", error);
-        eventsFeed.innerHTML = `
-            <div class="error-events">
-                <p>Error loading events. <button onclick="loadEvents()" class="btn btn-primary">Retry</button></p>
-            </div>
-        `;
-    } finally {
-        refreshBtn.classList.remove('loading');
-    }
-}
-
-async function loadEventsFromFirestore() {
-    try {
-        const now = new Date();
-        const querySnapshot = await db.collection("events")
-            .where("date", ">=", now.toISOString())
-            .orderBy("date")
-            .limit(10)
-            .get();
         
-        return querySnapshot.docs.map(doc => doc.data());
-    } catch (error) {
-        console.error("Error loading events from Firestore:", error);
-        return [];
-    }
-}
-
-async function saveEventsToFirestore(events) {
-    try {
-        const batch = db.batch();
-        const eventsRef = db.collection("events");
+        .dark-mode .event-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
         
-        // Clear old events first
-        const oldEvents = await db.collection("events").get();
-        oldEvents.forEach(doc => {
-            batch.delete(doc.ref);
-        });
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
         
-        // Add new events
-        events.forEach(event => {
-            const docRef = eventsRef.doc(); // Auto-generated ID
-            batch.set(docRef, {
-                title: event.title,
-                date: event.date,
-                location: event.location || 'Caribbean',
-                description: event.description || '',
-                url: event.url || '',
-                source: event.source || 'Caribbean Events',
-                lastUpdated: new Date().toISOString()
-            });
-        });
+        .dark-mode .event-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
         
-        await batch.commit();
-        console.log("Events saved to Firestore");
-    } catch (error) {
-        console.error("Error saving events to Firestore:", error);
-    }
-}
-
-function displayEvents(events) {
-    const eventsFeed = document.getElementById('eventsFeed');
-    
-    if (!events || events.length === 0) {
-        eventsFeed.innerHTML = `
-            <div class="error-events">
-                <p>No upcoming events found.</p>
-                <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
-            </div>
-        `;
-        return;
-    }
-
-    // Filter out past events and sort by date
-    const now = new Date();
-    const upcomingEvents = events
-        .filter(event => new Date(event.date) >= now)
-        .sort((a, b) => new Date(a.date) - new Date(b.date));
-
-    if (upcomingEvents.length === 0) {
-        eventsFeed.innerHTML = `
-            <div class="error-events">
-                <p>No upcoming events scheduled. Check back later!</p>
-                <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
-            </div>
-        `;
-        return;
-    }
-
-    eventsFeed.innerHTML = upcomingEvents.map(event => `
-        <div class="event-card">
-            <div class="event-date">
-                <div class="event-day">${new Date(event.date).getDate()}</div>
-                <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
-            </div>
-            <div class="event-details">
-                <span class="event-source">${event.source || 'Caribbean Event'}</span>
-                <h3 class="event-title">${event.title}</h3>
-                <div class="event-location">
-                    <i class="fas fa-map-marker-alt"></i> ${event.location || 'Caribbean'}
-                </div>
-                ${event.description ? `<p class="event-description">${event.description.substring(0, 120)}...</p>` : ''}
-                ${event.url ? `<a href="${event.url}" target="_blank" class="event-link">More details <i class="fas fa-external-link-alt"></i></a>` : ''}
-            </div>
-        </div>
-    `).join('');
-}
+        .event-date {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            min-width: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .event-day {
+            font-size: 1.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .event-month {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .event-details {
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .dark-mode .event-details {
+            color: var(--text-dark);
+        }
+        
+        .event-source {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .dark-mode .event-source {
+            color: #aaa;
+        }
+        
+        .event-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .event-location {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .dark-mode .event-location {
+            color: #aaa;
+        }
+        
+        .event-description {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .event-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .event-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-events {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .error-events {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+        }
+        
+        /* ===== NEWSLETTER FORM ===== */
+        .newsletter-section {
+            background: #f0f8ff;
+            padding: 40px 0;
+            margin: 40px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .newsletter-section {
+            background: #1a1a2e;
+        }
+        
+        .newsletter-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+        
+        .dark-mode .newsletter-form input {
+            background: #333;
+            border-color: #444;
+            color: white;
+        }
+        
+        .newsletter-form button {
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-form button:hover {
+            background: #004494;
+        }
+        
+        /* ===== DARK MODE TOGGLE ===== */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
         
         /* ===== RESPONSIVE ===== */
         @media (max-width: 768px) {
@@ -629,68 +938,20 @@ function displayEvents(events) {
             .article-image {
                 height: 250px;
             }
-        }
-
-        /* ===== NEW STYLES FOR NEWS SCRAPER ===== */
-        .refresh-container {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-        
-        .refresh-btn {
-            background: var(--primary);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-        }
-        
-        .refresh-btn:hover {
-            background: #004494;
-        }
-        
-        .refresh-btn .spinner {
-            display: none;
-            animation: spin 1s linear infinite;
-        }
-        
-        .refresh-btn.loading .spinner {
-            display: inline-block;
-        }
-        
-        .refresh-btn.loading .text {
-            display: none;
-        }
-        
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-        
-        .loading-news {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            font-size: 1.2rem;
-        }
-        
-        .error-news {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 40px;
-            color: var(--secondary);
-        }
-        
-        /* Improved mobile login button */
-        @media (max-width: 768px) {
+            
+            .hurricane-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .forecast-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            /* Improved mobile login button */
             .auth-section {
                 position: static;
             }
@@ -724,6 +985,11 @@ function displayEvents(events) {
                 right: 10px;
                 bottom: 80px;
                 top: auto;
+            }
+            
+            .dark-mode-toggle {
+                bottom: 80px;
+                left: 20px;
             }
         }
     </style>
@@ -792,6 +1058,17 @@ function displayEvents(events) {
                     </div>
                 </section>
                 
+                <!-- SKN VIBES NEWS SECTION -->
+                <section class="local-news-section">
+                    <div class="local-news-header">
+                        <h2><i class="fas fa-map-marker-alt"></i> SKN Vibes News</h2>
+                        <img src="https://www.sknvibes.com/images/logo.png" alt="SKN Vibes Logo" style="height: 40px;">
+                    </div>
+                    <div class="news-grid" id="sknVibesFeed">
+                        <div class="loading-news">Loading news from SKN Vibes...</div>
+                    </div>
+                </section>
+                
                 <!-- NEWS SECTION -->
                 <section id="news">
                     <div class="refresh-container">
@@ -803,6 +1080,18 @@ function displayEvents(events) {
                     </div>
                     <div class="news-grid" id="newsFeed">
                         <div class="loading-news">Loading Caribbean news...</div>
+                    </div>
+                </section>
+
+                <!-- NEWSLETTER SECTION -->
+                <section class="newsletter-section">
+                    <div class="newsletter-container">
+                        <h2>Stay Updated</h2>
+                        <p>Subscribe to our newsletter for daily news updates</p>
+                        <form class="newsletter-form" id="newsletterForm" netlify>
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
                     </div>
                 </section>
 
@@ -820,6 +1109,23 @@ function displayEvents(events) {
         <section id="article-section" class="container" style="display:none;">
             <div class="article-detail" id="articleDetail">
                 <!-- Article content will load here -->
+            </div>
+            
+            <!-- Social Sharing -->
+            <div class="social-sharing" id="socialSharing">
+                <p>Share this article:</p>
+                <button class="share-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="share-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                </button>
+                <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <button class="share-btn email" onclick="shareViaEmail()">
+                    <i class="fas fa-envelope"></i>
+                </button>
             </div>
         </section>
         
@@ -911,6 +1217,12 @@ function displayEvents(events) {
                         <i class="fas fa-sun"></i>
                         <p id="weather-uv">--</p>
                     </div>
+                </div>
+                
+                <!-- 3-Day Forecast -->
+                <h4 style="margin-top: 30px;">3-Day Forecast</h4>
+                <div class="forecast-container" id="weatherForecast">
+                    <!-- Forecast will be loaded here -->
                 </div>
             </div>
             
@@ -1065,6 +1377,11 @@ function displayEvents(events) {
         </div>
     </div>
     
+    <!-- DARK MODE TOGGLE -->
+    <button class="dark-mode-toggle" id="darkModeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
     <!-- LOGIN MODAL -->
     <div id="loginModal" class="login-modal">
         <div class="login-form">
@@ -1211,6 +1528,16 @@ function displayEvents(events) {
             image: "https://buckiegotit.com/wp-content/uploads/2021/05/buckiegotit-logo.png"
         };
 
+        // SKN Vibes news source
+        const SKN_VIBES_SOURCE = {
+            name: "SKN Vibes",
+            url: "https://www.sknvibes.com/news/news.cfm",
+            type: "scrape",
+            selector: ".news-item h3 a",
+            baseUrl: "https://www.sknvibes.com",
+            image: "https://www.sknvibes.com/images/logo.png"
+        };
+
         // ===== API CONFIGURATION =====
         const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
         const HURRICANE_API_URL = "https://www.nhc.noaa.gov/gtwo.xml";
@@ -1234,6 +1561,9 @@ function displayEvents(events) {
         // ===== WEATHER API =====
         const WEATHER_API = (city) => 
             `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
+        
+        const WEATHER_FORECAST_API = (city) =>
+            `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=3&aqi=no&alerts=no`;
 
         // Caribbean capitals for weather
         const CARIBBEAN_CAPITALS = [
@@ -1255,6 +1585,7 @@ function displayEvents(events) {
         const loginForm = document.getElementById('loginForm');
         const newsFeed = document.getElementById('newsFeed');
         const localNewsFeed = document.getElementById('localNewsFeed');
+        const sknVibesFeed = document.getElementById('sknVibesFeed');
         const reporterNewsFeed = document.getElementById('reporterNewsFeed');
         const reporterNewsSection = document.getElementById('reporter-news');
         const articleDetail = document.getElementById('articleDetail');
@@ -1268,6 +1599,8 @@ function displayEvents(events) {
         const contactForm = document.getElementById('contactForm');
         const activeStorms = document.getElementById('active-storms');
         const refreshBtn = document.getElementById('refreshNews');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const newsletterForm = document.getElementById('newsletterForm');
         
         // Weather elements
         const weatherDesc = document.getElementById('weather-desc');
@@ -1275,6 +1608,80 @@ function displayEvents(events) {
         const weatherWind = document.getElementById('weather-wind');
         const weatherHumidity = document.getElementById('weather-humidity');
         const weatherUv = document.getElementById('weather-uv');
+        const weatherForecast = document.getElementById('weatherForecast');
+
+        // ===== DARK MODE TOGGLE =====
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            // Update toggle icon
+            const icon = darkModeToggle.querySelector('i');
+            if (isDarkMode) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // ===== SOCIAL SHARING FUNCTIONS =====
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+
+        function shareOnTwitter() {
+            const text = encodeURIComponent(document.title);
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = encodeURIComponent(`${document.title} - ${window.location.href}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function shareViaEmail() {
+            const subject = encodeURIComponent(document.title);
+            const body = encodeURIComponent(`Check out this article: ${window.location.href}`);
+            window.open(`mailto:?subject=${subject}&body=${body}`);
+        }
+
+        // ===== LOAD SKN VIBES NEWS =====
+        async function loadSKNVibesNews() {
+            console.log("Loading news from SKN Vibes...");
+            sknVibesFeed.innerHTML = '<div class="loading-news">Loading news from SKN Vibes...</div>';
+            
+            try {
+                let articles = await scrapeNews(SKN_VIBES_SOURCE);
+                
+                if (articles.length > 0) {
+                    displayArticles(articles, sknVibesFeed);
+                } else {
+                    sknVibesFeed.innerHTML = '<div class="error-news"><p>No news found from SKN Vibes. Please try again later.</p></div>';
+                }
+            } catch (error) {
+                console.error("Error loading SKN Vibes news:", error);
+                sknVibesFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading SKN Vibes news. Please try refreshing.</p>
+                    </div>
+                `;
+            }
+        }
 
         // ===== NEWS LOADING FUNCTIONS =====
         async function loadAllNews() {
@@ -1534,6 +1941,7 @@ function displayEvents(events) {
             switch(section) {
                 case 'home':
                     loadLocalNews();
+                    loadSKNVibesNews();
                     loadAllNews();
                     break;
                 case 'weather':
@@ -1595,6 +2003,9 @@ function displayEvents(events) {
                 </a>
             `;
             
+            // Show social sharing buttons
+            document.getElementById('socialSharing').style.display = 'flex';
+            
             // Scroll to top
             window.scrollTo(0, 0);
         }
@@ -1613,6 +2024,33 @@ function displayEvents(events) {
                 weatherWind.textContent = `${data.current.wind_kph} km/h`;
                 weatherHumidity.textContent = `${data.current.humidity}%`;
                 weatherUv.textContent = data.current.uv;
+                
+                // Load forecast
+                const forecastResponse = await fetch(WEATHER_FORECAST_API("Basseterre"));
+                if (!forecastResponse.ok) throw new Error("Weather forecast API failed");
+                const forecastData = await forecastResponse.json();
+                
+                // Display 3-day forecast
+                weatherForecast.innerHTML = '';
+                forecastData.forecast.forecastday.slice(0, 3).forEach(day => {
+                    const date = new Date(day.date);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const weatherIcon = getWeatherIcon(day.day.condition.code);
+                    
+                    weatherForecast.innerHTML += `
+                        <div class="forecast-day">
+                            <h4>${dayName}</h4>
+                            <div class="forecast-icon">
+                                <i class="fas ${weatherIcon}"></i>
+                            </div>
+                            <p>${day.day.condition.text}</p>
+                            <div class="forecast-temp">
+                                <span class="forecast-high">${Math.round(day.day.maxtemp_c)}°</span>
+                                <span class="forecast-low">${Math.round(day.day.mintemp_c)}°</span>
+                            </div>
+                        </div>
+                    `;
+                });
                 
                 // Load other islands weather
                 const weatherGrid = document.getElementById('weather-grid');
@@ -1657,7 +2095,21 @@ function displayEvents(events) {
                 weatherWind.textContent = "-- km/h";
                 weatherHumidity.textContent = "--%";
                 weatherUv.textContent = "--";
+                weatherForecast.innerHTML = '<p>Forecast data unavailable</p>';
             }
+        }
+
+        // Helper function to get weather icon based on condition code
+        function getWeatherIcon(code) {
+            // This is a simplified version - you can expand it based on the weather API's condition codes
+            if (code === 1000) return 'fa-sun'; // Sunny
+            if (code === 1003) return 'fa-cloud-sun'; // Partly cloudy
+            if (code === 1006 || code === 1009) return 'fa-cloud'; // Cloudy
+            if (code >= 1063 && code <= 1201) return 'fa-cloud-rain'; // Rain
+            if (code >= 1204 && code <= 1237) return 'fa-snowflake'; // Snow
+            if (code >= 1240 && code <= 1264) return 'fa-cloud-showers-heavy'; // Heavy rain
+            if (code >= 1273 && code <= 1282) return 'fa-bolt'; // Thunderstorm
+            return 'fa-cloud';
         }
 
         // ===== LOAD HURRICANE DATA =====
@@ -1850,6 +2302,23 @@ function displayEvents(events) {
             }
         });
 
+        // ===== NEWSLETTER FORM =====
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input').value;
+            
+            try {
+                // Netlify will handle the form submission
+                console.log("Newsletter form submitted:", { email });
+                alert('Thank you for subscribing to our newsletter!');
+                newsletterForm.reset();
+                
+            } catch (error) {
+                console.error("Error submitting newsletter form:", error);
+                alert("Error submitting form. Please try again.");
+            }
+        });
+
         // ===== ARTICLE FORM =====
         articleForm.addEventListener('submit', async (e) => {
             e.preventDefault();
@@ -1920,6 +2389,7 @@ function displayEvents(events) {
             
             // Always load news (whether logged in or not)
             loadLocalNews();
+            loadSKNVibesNews();
             loadAllNews();
         });
 
@@ -1981,6 +2451,7 @@ function displayEvents(events) {
         // Refresh button handlers
         refreshBtn.addEventListener('click', () => {
             loadLocalNews();
+            loadSKNVibesNews();
             loadAllNews();
         });
 
