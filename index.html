@@ -1,0 +1,2487 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KAUS News - Caribbean News Network</title>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+        :root {
+            --primary: #0056b3;
+            --secondary: #e63946;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --text: #333;
+            --text-light: #6c757d;
+            --font-main: 'Montserrat', sans-serif;
+            --font-heading: 'Playfair Display', serif;
+            
+            /* Dark mode variables */
+            --bg-dark: #121212;
+            --text-dark: #e0e0e0;
+            --card-dark: #1e1e1e;
+            --border-dark: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: var(--font-main);
+            color: var(--text);
+            background: var(--light);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+        
+        body.dark-mode {
+            background: var(--bg-dark);
+            color: var(--text-dark);
+        }
+        
+        h1, h2, h3, h4 {
+            font-family: var(--font-heading);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: none;
+            font-weight: 600;
+        }
+        
+        .btn-primary {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: #004494;
+        }
+        
+        section {
+            padding: 40px 0;
+        }
+        
+        /* ===== HEADER STYLES ===== */
+        header {
+            background: white;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode header {
+            background: var(--card-dark);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo h1 {
+            color: var(--primary);
+            font-size: 2rem;
+        }
+        
+        .logo p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+        
+        .dark-mode .logo p {
+            color: #aaa;
+        }
+        
+        /* ===== NAVIGATION ===== */
+        nav {
+            background: var(--dark);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode nav {
+            background: #111;
+        }
+        
+        .nav-links {
+            display: flex;
+            list-style: none;
+        }
+        
+        .nav-links li a {
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            display: block;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-links li a:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        /* ===== HERO SECTION ===== */
+        .hero {
+            background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80');
+            background-size: cover;
+            background-position: center;
+            color: white;
+            padding: 80px 0;
+            text-align: center;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        /* ===== NEWS GRID ===== */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+        
+        .news-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .dark-mode .news-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .news-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .news-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .news-image {
+            height: 200px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .news-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+            background-color: #f0f0f0;
+        }
+        
+        .dark-mode .news-image img {
+            background-color: #333;
+        }
+        
+        .news-image img.error {
+            visibility: hidden;
+        }
+        
+        .news-image .image-fallback {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background-color: #f0f0f0;
+            color: #999;
+            font-size: 1rem;
+            text-align: center;
+            padding: 10px;
+        }
+        
+        .dark-mode .news-image .image-fallback {
+            background-color: #333;
+            color: #aaa;
+        }
+        
+        .news-card:hover .news-image img {
+            transform: scale(1.05);
+        }
+        
+        .news-content {
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .dark-mode .news-content {
+            color: var(--text-dark);
+        }
+        
+        .news-source {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-bottom: 10px;
+        }
+        
+        .news-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+        }
+        
+        .news-date {
+            color: var(--text-light);
+            font-size: 0.8rem;
+            margin-top: auto;
+            padding-top: 10px;
+        }
+        
+        .dark-mode .news-date {
+            color: #aaa;
+        }
+        
+        .news-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .news-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* ===== LOCAL NEWS SECTION ===== */
+        .local-news-section {
+            background: #f0f8ff;
+            padding: 30px 0;
+            margin-bottom: 40px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .local-news-section {
+            background: #1a1a2e;
+        }
+        
+        .local-news-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .local-news-header h2 {
+            color: var(--primary);
+        }
+        
+        .local-news-header img {
+            height: 40px;
+        }
+        
+        /* ===== ARTICLE DETAIL PAGE ===== */
+        .article-detail {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .article-detail {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .article-header {
+            margin-bottom: 30px;
+        }
+        
+        .article-title {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--text);
+        }
+        
+        .dark-mode .article-title {
+            color: var(--text-dark);
+        }
+        
+        .article-meta {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            color: var(--text-light);
+        }
+        
+        .dark-mode .article-meta {
+            color: #aaa;
+        }
+        
+        .article-source {
+            background: var(--primary);
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            margin-right: 15px;
+        }
+        
+        .article-date {
+            font-size: 0.9rem;
+        }
+        
+        .article-image {
+            width: 100%;
+            height: 400px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .article-content {
+            line-height: 1.8;
+            color: var(--text);
+        }
+        
+        .dark-mode .article-content {
+            color: var(--text-dark);
+        }
+        
+        .article-content p {
+            margin-bottom: 20px;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* ===== SOCIAL SHARING ===== */
+        .social-sharing {
+            display: flex;
+            gap: 10px;
+            margin: 20px 0;
+        }
+        
+        .share-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            color: white;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+        }
+        
+        .share-btn:hover {
+            transform: translateY(-2px);
+        }
+        
+        .share-btn.facebook {
+            background: #3b5998;
+        }
+        
+        .share-btn.twitter {
+            background: #1da1f2;
+        }
+        
+        .share-btn.whatsapp {
+            background: #25d366;
+        }
+        
+        .share-btn.email {
+            background: #777;
+        }
+        
+        /* ===== WEATHER WIDGET ===== */
+        .weather-card {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            margin-bottom: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .weather-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .weather-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .weather-header h3 {
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-header h3 {
+            color: var(--text-dark);
+        }
+        
+        .weather-temp {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-temp {
+            color: var(--text-dark);
+        }
+        
+        .weather-details {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+        
+        .weather-detail {
+            text-align: center;
+        }
+        
+        .weather-detail i {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary);
+        }
+        
+        .weather-detail p {
+            color: var(--text);
+        }
+        
+        .dark-mode .weather-detail p {
+            color: var(--text-dark);
+        }
+        
+        /* Enhanced weather forecast */
+        .forecast-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 30px;
+        }
+        
+        .forecast-day {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .forecast-day {
+            background: var(--card-dark);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .forecast-day h4 {
+            margin-bottom: 10px;
+            font-size: 1rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .forecast-day h4 {
+            color: var(--text-dark);
+        }
+        
+        .forecast-icon {
+            font-size: 2rem;
+            margin: 10px 0;
+            color: var(--primary);
+        }
+        
+        .forecast-temp {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+        }
+        
+        .forecast-high {
+            font-weight: bold;
+            color: var(--text);
+        }
+        
+        .forecast-low {
+            color: var(--text-light);
+        }
+        
+        .dark-mode .forecast-high {
+            color: var(--text-dark);
+        }
+        
+        .dark-mode .forecast-low {
+            color: #aaa;
+        }
+        
+        /* ===== HURRICANE TRACKER STYLES ===== */
+        .hurricane-info {
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .hurricane-alerts {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-alerts {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .hurricane-map-container {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-map-container {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .storm-card {
+            background: #f8f9fa;
+            border-left: 4px solid var(--secondary);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .storm-card {
+            background: #252525;
+        }
+
+        .storm-name {
+            font-weight: bold;
+            color: var(--secondary);
+            margin-bottom: 5px;
+        }
+
+        .storm-details {
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .storm-details {
+            color: var(--text-dark);
+        }
+
+        .storm-details p {
+            margin-bottom: 5px;
+        }
+
+        .hurricane-safety {
+            background: white;
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .hurricane-safety {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+
+        .safety-tips {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .tip {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .tip {
+            background: #252525;
+        }
+
+        .tip i {
+            font-size: 2rem;
+            color: var(--primary);
+            margin-bottom: 15px;
+        }
+
+        .tip h4 {
+            margin-bottom: 10px;
+            color: var(--text);
+        }
+        
+        .dark-mode .tip h4 {
+            color: var(--text-dark);
+        }
+
+        .tip ul {
+            margin-left: 20px;
+            font-size: 0.9rem;
+            color: var(--text);
+        }
+        
+        .dark-mode .tip ul {
+            color: var(--text-dark);
+        }
+
+        .tip li {
+            margin-bottom: 5px;
+        }
+
+        .emergency-contacts {
+            background: #fff8f8;
+            border-left: 4px solid var(--secondary);
+            padding: 20px;
+            margin-top: 30px;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .emergency-contacts {
+            background: #2a1a1a;
+        }
+
+        .emergency-contacts ul {
+            margin-top: 10px;
+            list-style: none;
+        }
+
+        .emergency-contacts li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+        }
+
+        .emergency-contacts li:before {
+            content: "•";
+            color: var(--secondary);
+            font-size: 1.5rem;
+            position: absolute;
+            left: 0;
+            top: -5px;
+        }
+
+        /* ===== EVENTS SECTION ===== */
+        .events-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .event-card {
+            display: flex;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .event-card {
+            background: var(--card-dark);
+            box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+        }
+        
+        .event-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .dark-mode .event-card:hover {
+            box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+        }
+        
+        .event-date {
+            background: var(--primary);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            min-width: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .event-day {
+            font-size: 1.8rem;
+            font-weight: bold;
+            line-height: 1;
+        }
+        
+        .event-month {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            margin-top: 5px;
+        }
+        
+        .event-details {
+            padding: 15px;
+            flex: 1;
+        }
+        
+        .dark-mode .event-details {
+            color: var(--text-dark);
+        }
+        
+        .event-source {
+            font-size: 0.8rem;
+            color: var(--text-light);
+            margin-bottom: 5px;
+        }
+        
+        .dark-mode .event-source {
+            color: #aaa;
+        }
+        
+        .event-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+        }
+        
+        .event-location {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 10px;
+        }
+        
+        .dark-mode .event-location {
+            color: #aaa;
+        }
+        
+        .event-description {
+            font-size: 0.9rem;
+            margin-bottom: 10px;
+        }
+        
+        .event-link {
+            color: var(--primary);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+        
+        .event-link:hover {
+            text-decoration: underline;
+        }
+        
+        .loading-events {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            font-size: 1.2rem;
+        }
+        
+        .error-events {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 40px;
+            color: var(--secondary);
+        }
+        
+        /* ===== NEWSLETTER FORM ===== */
+        .newsletter-section {
+            background: #f0f8ff;
+            padding: 40px 0;
+            margin: 40px 0;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode .newsletter-section {
+            background: #1a1a2e;
+        }
+        
+        .newsletter-container {
+            max-width: 600px;
+            margin: 0 auto;
+            text-align: center;
+        }
+        
+        .newsletter-form {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        .newsletter-form input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: var(--font-main);
+        }
+        
+        .dark-mode .newsletter-form input {
+            background: #333;
+            border-color: #444;
+            color: white;
+        }
+        
+        .newsletter-form button {
+            padding: 12px 25px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .newsletter-form button:hover {
+            background: #004494;
+        }
+        
+        /* ===== DARK MODE TOGGLE ===== */
+        .dark-mode-toggle {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            border: none;
+            transition: all 0.3s ease;
+        }
+        
+        .dark-mode-toggle:hover {
+            transform: scale(1.1);
+        }
+        
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 768px) {
+            .header-content {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .nav-links {
+                flex-direction: column;
+            }
+            
+            .form-row {
+                flex-direction: column;
+                gap: 0;
+            }
+            
+            .weather-details {
+                grid-template-columns: 1fr;
+            }
+            
+            .article-image {
+                height: 250px;
+            }
+            
+            .hurricane-info {
+                grid-template-columns: 1fr;
+            }
+            
+            .forecast-container {
+                grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            }
+            
+            .newsletter-form {
+                flex-direction: column;
+            }
+            
+            /* Improved mobile login button */
+            .auth-section {
+                position: static;
+            }
+            
+            #loginBtn {
+                padding: 8px 12px;
+                font-size: 0.8rem;
+                position: fixed;
+                bottom: 20px;
+                right: 20px;
+                z-index: 1000;
+                border-radius: 50%;
+                width: 50px;
+                height: 50px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            }
+            
+            #loginBtn .fa-user {
+                margin-right: 0;
+            }
+            
+            #loginBtn span {
+                display: none;
+            }
+            
+            .user-dropdown {
+                width: 180px;
+                right: 10px;
+                bottom: 80px;
+                top: auto;
+            }
+            
+            .dark-mode-toggle {
+                bottom: 80px;
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- HEADER -->
+    <header>
+        <div class="container header-content">
+            <div class="logo">
+                <h1>KAUS NEWS</h1>
+                <p>Caribbean News Network</p>
+            </div>
+            
+            <div class="auth-section">
+                <button id="loginBtn" class="btn btn-primary">
+                    <i class="fas fa-user"></i> Reporter Login
+                </button>
+                
+                <div id="userDropdown" class="user-dropdown">
+                    <div class="user-info">
+                        <span id="userEmail"></span>
+                        <button id="logoutBtn" class="btn btn-primary" style="margin-top: 10px; width: 100%;">
+                            Logout
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <!-- NAVIGATION -->
+    <nav>
+        <div class="container">
+            <ul class="nav-links">
+                <li><a href="#" data-section="home">Home</a></li>
+                <li><a href="#" data-section="about">About</a></li>
+                <li><a href="#" data-section="contact">Contact</a></li>
+                <li><a href="#" data-section="weather">Weather</a></li>
+                <li><a href="#" data-section="hurricane">Hurricane Tracker</a></li>
+                <li><a href="#" data-section="events">Events</a></li>
+            </ul>
+        </div>
+    </nav>
+    
+    <!-- MAIN CONTENT AREA -->
+    <div id="content-area">
+        <!-- HOME SECTION -->
+        <section id="home-section">
+            <!-- HERO SECTION -->
+            <div class="hero">
+                <div class="container">
+                    <h2>Your Source for Caribbean News</h2>
+                    <p>Covering St. Kitts, Nevis, and the entire Caribbean region</p>
+                </div>
+            </div>
+            
+            <div class="container">
+                <!-- LOCAL NEWS SECTION -->
+                <section class="local-news-section">
+                    <div class="local-news-header">
+                        <h2><i class="fas fa-map-marker-alt"></i> St. Kitts & Nevis Local News</h2>
+                        <img src="https://buckiegotit.com/wp-content/uploads/2021/05/buckiegotit-logo.png" alt="BuckieGotIt Logo">
+                    </div>
+                    <div class="news-grid" id="localNewsFeed">
+                        <div class="loading-news">Loading local news from BuckieGotIt...</div>
+                    </div>
+                </section>
+                
+                <!-- SKN VIBES NEWS SECTION -->
+                <section class="local-news-section">
+                    <div class="local-news-header">
+                        <h2><i class="fas fa-map-marker-alt"></i> SKN Vibes News</h2>
+                        <img src="https://www.sknvibes.com/images/logo.png" alt="SKN Vibes Logo" style="height: 40px;">
+                    </div>
+                    <div class="news-grid" id="sknVibesFeed">
+                        <div class="loading-news">Loading news from SKN Vibes...</div>
+                    </div>
+                </section>
+                
+                <!-- NEWS SECTION -->
+                <section id="news">
+                    <div class="refresh-container">
+                        <h2><i class="fas fa-newspaper"></i> Latest Caribbean News</h2>
+                        <button id="refreshNews" class="refresh-btn">
+                            <i class="fas fa-sync-alt spinner"></i>
+                            <span class="text">Refresh News</span>
+                        </button>
+                    </div>
+                    <div class="news-grid" id="newsFeed">
+                        <div class="loading-news">Loading Caribbean news...</div>
+                    </div>
+                </section>
+
+                <!-- NEWSLETTER SECTION -->
+                <section class="newsletter-section">
+                    <div class="newsletter-container">
+                        <h2>Stay Updated</h2>
+                        <p>Subscribe to our newsletter for daily news updates</p>
+                        <form class="newsletter-form" id="newsletterForm" netlify>
+                            <input type="email" placeholder="Your email address" required>
+                            <button type="submit">Subscribe</button>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- REPORTER'S NEWS SECTION (ONLY SHOWS WHEN LOGGED IN) -->
+                <section id="reporter-news" style="display: none; margin-top: 50px;">
+                    <h2><i class="fas fa-pen"></i> Reporter's News</h2>
+                    <div class="news-grid" id="reporterNewsFeed">
+                        <!-- Reporter's articles will load here -->
+                    </div>
+                </section>
+            </div>
+        </section>
+        
+        <!-- ARTICLE DETAIL SECTION -->
+        <section id="article-section" class="container" style="display:none;">
+            <div class="article-detail" id="articleDetail">
+                <!-- Article content will load here -->
+            </div>
+            
+            <!-- Social Sharing -->
+            <div class="social-sharing" id="socialSharing">
+                <p>Share this article:</p>
+                <button class="share-btn facebook" onclick="shareOnFacebook()">
+                    <i class="fab fa-facebook-f"></i>
+                </button>
+                <button class="share-btn twitter" onclick="shareOnTwitter()">
+                    <i class="fab fa-twitter"></i>
+                </button>
+                <button class="share-btn whatsapp" onclick="shareOnWhatsApp()">
+                    <i class="fab fa-whatsapp"></i>
+                </button>
+                <button class="share-btn email" onclick="shareViaEmail()">
+                    <i class="fas fa-envelope"></i>
+                </button>
+            </div>
+        </section>
+        
+        <!-- ABOUT SECTION -->
+        <section id="about-section" class="container" style="display:none;">
+            <div class="page-content">
+                <h2>About KAUS News</h2>
+                <p>KAUS News is the premier news organization covering St. Kitts, Nevis, and the wider Caribbean region. Founded in 2023, we are committed to delivering accurate, timely news to our community.</p>
+                
+                <h3 style="margin-top: 20px;">Our Coverage</h3>
+                <p>We provide comprehensive coverage of:</p>
+                <ul style="margin: 15px 0 15px 20px;">
+                    <li>Local news from St. Kitts and Nevis</li>
+                    <li>Regional Caribbean developments</li>
+                    <li>International news affecting the Caribbean</li>
+                    <li>Weather updates for the Eastern Caribbean</li>
+                    <li>Cultural events and festivals</li>
+                </ul>
+                
+                <h3>Our Team</h3>
+                <p>Our team of experienced journalists and correspondents across the Caribbean ensure we bring you the most relevant and important stories from our region.</p>
+            </div>
+        </section>
+        
+        <!-- CONTACT SECTION -->
+        <section id="contact-section" class="container" style="display:none;">
+            <div class="page-content">
+                <h2>Contact Us</h2>
+                <p>Have a news tip or want to get in touch? Reach out to our team:</p>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-top: 30px;">
+                    <div>
+                        <h3><i class="fas fa-map-marker-alt"></i> Our Office</h3>
+                        <p>123 Bay Road<br>Basseterre, St. Kitts</p>
+                        
+                        <h3 style="margin-top: 20px;"><i class="fas fa-phone"></i> Phone</h3>
+                        <p>(869) 555-NEWS</p>
+                        
+                        <h3 style="margin-top: 20px;"><i class="fas fa-envelope"></i> Email</h3>
+                        <p>info@kausnews.com</p>
+                    </div>
+                    
+                    <div>
+                        <h3>Send Us a Message</h3>
+                        <form id="contactForm" class="contact-form" netlify>
+                            <div class="form-group">
+                                <label for="contact-name">Your Name</label>
+                                <input type="text" id="contact-name" name="name" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-email">Email Address</label>
+                                <input type="email" id="contact-email" name="email" required>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="contact-message">Message</label>
+                                <textarea id="contact-message" name="message" required></textarea>
+                            </div>
+                            
+                            <button type="submit" class="btn btn-primary">Send Message</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <!-- WEATHER SECTION -->
+        <section id="weather-section" class="container" style="display:none;">
+            <h2><i class="fas fa-cloud-sun"></i> Caribbean Weather</h2>
+            <div class="weather-card">
+                <div class="weather-header">
+                    <div>
+                        <h3>Basseterre, St. Kitts</h3>
+                        <p id="weather-desc">Loading weather...</p>
+                    </div>
+                    <div class="weather-temp" id="weather-temp">--°C</div>
+                </div>
+                <div class="weather-details">
+                    <div class="weather-detail">
+                        <i class="fas fa-wind"></i>
+                        <p id="weather-wind">-- km/h</p>
+                    </div>
+                    <div class="weather-detail">
+                        <i class="fas fa-tint"></i>
+                        <p id="weather-humidity">--%</p>
+                    </div>
+                    <div class="weather-detail">
+                        <i class="fas fa-sun"></i>
+                        <p id="weather-uv">--</p>
+                    </div>
+                </div>
+                
+                <!-- 3-Day Forecast -->
+                <h4 style="margin-top: 30px;">3-Day Forecast</h4>
+                <div class="forecast-container" id="weatherForecast">
+                    <!-- Forecast will be loaded here -->
+                </div>
+            </div>
+            
+            <h3 style="margin-top: 40px;">Other Islands</h3>
+            <div id="weather-grid" style="display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 20px; margin-top: 20px;">
+                <!-- Other islands weather will load here -->
+            </div>
+        </section>
+        
+        <!-- HURRICANE TRACKER SECTION -->
+        <section id="hurricane-section" class="container" style="display:none;">
+            <h2><i class="fas fa-hurricane"></i> Live Hurricane Tracker</h2>
+            
+            <div class="hurricane-info">
+                <div class="hurricane-alerts">
+                    <h3>Current Tropical Systems</h3>
+                    <div id="active-storms">
+                        <!-- Active storms will load here -->
+                        <p>Loading current tropical systems...</p>
+                    </div>
+                </div>
+                
+                <div class="hurricane-map-container">
+                    <h3>Live Storm Tracking Map</h3>
+                    <div class="map-embed">
+                        <!-- Embedded hurricane tracker -->
+                        <iframe src="https://embed.windy.com/embed2.html?lat=17.357&lon=-62.782&detailLat=17.357&detailLon=-62.782&width=650&height=450&zoom=5&level=surface&overlay=wind&product=ecmwf&menu=&message=&marker=&calendar=now&pressure=&type=map&location=coordinates&detail=&metricWind=km%2Fh&metricTemp=%C2%B0C&radarRange=-1" width="100%" height="500" frameborder="0"></iframe>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="hurricane-safety">
+                <h3>Hurricane Preparedness</h3>
+                <div class="safety-tips">
+                    <div class="tip">
+                        <i class="fas fa-home"></i>
+                        <h4>Before the Storm</h4>
+                        <ul>
+                            <li>Create an emergency kit with food, water, and supplies</li>
+                            <li>Secure your home with storm shutters or plywood</li>
+                            <li>Know your evacuation route</li>
+                        </ul>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-user-shield"></i>
+                        <h4>During the Storm</h4>
+                        <ul>
+                            <li>Stay indoors away from windows</li>
+                            <li>Monitor official weather updates</li>
+                            <li>Use battery-powered devices if power fails</li>
+                        </ul>
+                    </div>
+                    <div class="tip">
+                        <i class="fas fa-ambulance"></i>
+                        <h4>After the Storm</h4>
+                        <ul>
+                            <li>Wait for official all-clear before going outside</li>
+                            <li>Avoid flood waters and downed power lines</li>
+                            <li>Check on neighbors, especially elderly</li>
+                        </ul>
+                    </div>
+                </div>
+                
+                <div class="emergency-contacts">
+                    <h4>Emergency Contacts</h4>
+                    <ul>
+                        <li><strong>National Emergency Management Agency (NEMA):</strong> (869) 466-5100</li>
+                        <li><strong>St. Kitts Police:</strong> 911 or (869) 465-2241</li>
+                        <li><strong>Nevis Police:</strong> (869) 469-5391</li>
+                        <li><strong>Red Cross:</strong> (869) 465-2674</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- EVENTS SECTION -->
+        <section id="events-section" class="container" style="display:none;">
+            <div class="refresh-container">
+                <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
+                <button id="refreshEvents" class="refresh-btn">
+                    <i class="fas fa-sync-alt spinner"></i>
+                    <span class="text">Refresh Events</span>
+                </button>
+            </div>
+            <div class="events-section" id="eventsFeed">
+                <div class="loading-events">Loading Caribbean events...</div>
+            </div>
+        </section>
+        
+        <!-- DASHBOARD (Reporter View) -->
+        <div id="dashboard" class="dashboard">
+            <form id="articleForm" class="dashboard-form" netlify>
+                <h2>Create New Article</h2>
+                
+                <div class="form-group">
+                    <label for="articleTitle">Headline</label>
+                    <input type="text" id="articleTitle" name="title" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="articleCategory">Category</label>
+                        <select id="articleCategory" name="category" required>
+                            <option value="">Select Category</option>
+                            <option value="politics">Politics</option>
+                            <option value="business">Business</option>
+                            <option value="sports">Sports</option>
+                            <option value="entertainment">Entertainment</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="articleLocation">Location</label>
+                        <select id="articleLocation" name="location" required>
+                            <option value="">Select Island</option>
+                            <option value="st-kitts">St. Kitts</option>
+                            <option value="nevis">Nevis</option>
+                            <option value="antigua">Antigua</option>
+                            <option value="barbados">Barbados</option>
+                            <option value="guyana">Guyana</option>
+                            <option value="jamaica">Jamaica</option>
+                            <option value="trinidad">Trinidad</option>
+                            <option value="regional">Regional</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleExcerpt">Excerpt (Short Summary)</label>
+                    <textarea id="articleExcerpt" name="excerpt" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label for="articleContent">Full Content</label>
+                    <textarea id="articleContent" name="content" required></textarea>
+                </div>
+                
+                <div class="form-group">
+                    <label>Featured Image</label>
+                    <input type="file" id="articleImage" name="image" accept="image/*">
+                    <div id="imagePreview" class="image-preview">
+                        <img id="previewImage" src="#" alt="Preview">
+                    </div>
+                </div>
+                
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">
+                        <i class="fas fa-paper-plane"></i> Publish Article
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- DARK MODE TOGGLE -->
+    <button class="dark-mode-toggle" id="darkModeToggle">
+        <i class="fas fa-moon"></i>
+    </button>
+    
+   
+    
+    <!-- FOOTER -->
+<footer>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>About KAUS News</h3>
+                <p>KAUS News is the premier news organization in St. Kitts and Nevis, delivering accurate, timely news since 2023.</p>
+            </div>
+            <div class="footer-column">
+                <h3>Quick Links</h3>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Advertise</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Privacy Policy</a></li>
+                </ul>
+            </div>
+            <div class="footer-column">
+                <h3>Contact Us</h3>
+                <p><i class="fas fa-map-marker-alt"></i> Basseterre, St. Kitts</p>
+                <p><i class="fas fa-phone"></i> +1 (869) 555-NEWS</p>
+                <p><i class="fas fa-envelope"></i> info@kausnews.com</p>
+            </div>
+        </div>
+        <div style="text-align: center; margin-top: 30px;">
+            <p>&copy; 2023 KAUS News. All rights reserved.</p>
+        </div>
+    </div>
+</footer>
+
+<style>
+    /* ===== FOOTER STYLES ===== */
+    footer {
+        background-color: #2c3e50;
+        color: #ecf0f1;
+        padding: 40px 0;
+        font-family: var(--font-main);
+    }
+
+    footer .footer-content {
+        display: flex;
+        justify-content: space-between;
+        flex-wrap: wrap;
+        gap: 30px;
+    }
+
+    .footer-column {
+        flex: 1;
+        min-width: 250px;
+    }
+
+    .footer-column h3 {
+        font-size: 1.2rem;
+        margin-bottom: 15px;
+    }
+
+    .footer-column p,
+    .footer-column ul li {
+        font-size: 0.95rem;
+        line-height: 1.6;
+    }
+
+    .footer-column ul {
+        list-style: none;
+        padding: 0;
+    }
+
+    .footer-column ul li {
+        margin-bottom: 8px;
+    }
+
+    .footer-column a {
+        color: #ecf0f1;
+        text-decoration: none;
+    }
+
+    .footer-column a:hover {
+        text-decoration: underline;
+    }
+</style>
+    
+    <!-- FIREBASE SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-storage-compat.js"></script>
+    
+    <script>
+        // ===== CARIBBEAN NEWS SOURCES =====
+        const CARIBBEAN_NEWS_SOURCES = [
+            // SKN Vibes (scraped)
+            {
+                name: "SKN Vibes",
+                url: "https://www.sknvibes.com/news/news.cfm",
+                type: "scrape",
+                selector: ".news-item h3 a",
+                baseUrl: "https://www.sknvibes.com",
+                image: "https://www.sknvibes.com/images/logo.png"
+            },
+            
+            // RSS Feeds
+            {
+                name: "Caribbean News Global",
+                url: "https://caribbeannewsglobal.com/feed/",
+                type: "rss",
+                image: "https://caribbeannewsglobal.com/wp-content/uploads/2020/10/cropped-Caribbean-News-Global-Logo-32x32.png"
+            },
+            {
+                name: "Jamaica Observer",
+                url: "https://www.jamaicaobserver.com/feed/",
+                type: "rss",
+                image: "https://www.jamaicaobserver.com/wp-content/uploads/2021/01/cropped-JO-Icon-192x192.png"
+            },
+            {
+                name: "Nation News Barbados",
+                url: "https://nationnews.com/feed/",
+                type: "rss",
+                image: "https://nationnews.com/wp-content/themes/nation-news/images/nation-news-logo.png"
+            },
+            {
+                name: "Trinidad Express",
+                url: "https://trinidadexpress.com/feed/",
+                type: "rss",
+                image: "https://trinidadexpress.com/wp-content/themes/express/images/logo.png"
+            },
+            {
+                name: "St. Lucia Times",
+                url: "https://stluciatimes.com/feed/",
+                type: "rss",
+                image: "https://stluciatimes.com/wp-content/uploads/2021/01/st-lucia-times-logo.png"
+            },
+            {
+                name: "Antigua Observer",
+                url: "https://antiguaobserver.com/feed/",
+                type: "rss",
+                image: "https://antiguaobserver.com/wp-content/uploads/2021/01/antigua-observer-logo.png"
+            },
+            {
+                name: "Dominica News Online",
+                url: "https://dominicanewsonline.com/feed/",
+                type: "rss",
+                image: "https://dominicanewsonline.com/wp-content/uploads/2021/01/dominica-news-online-logo.png"
+            },
+            {
+                name: "Barbados Today",
+                url: "https://barbadostoday.bb/feed/",
+                type: "rss",
+                image: "https://barbadostoday.bb/wp-content/uploads/2021/01/barbados-today-logo.png"
+            }
+        ];
+
+        // ===== LOCAL NEWS SOURCE =====
+        const LOCAL_NEWS_SOURCE = {
+            name: "BuckieGotIt",
+            url: "https://buckiegotit.com/",
+            type: "scrape",
+            selector: ".jeg_postblock_1 .jeg_post_title a",
+            baseUrl: "https://buckiegotit.com",
+            image: "https://buckiegotit.com/wp-content/uploads/2021/05/buckiegotit-logo.png"
+        };
+
+        // SKN Vibes news source
+        const SKN_VIBES_SOURCE = {
+            name: "SKN Vibes",
+            url: "https://www.sknvibes.com/news/news.cfm",
+            type: "scrape",
+            selector: ".news-item h3 a",
+            baseUrl: "https://www.sknvibes.com",
+            image: "https://www.sknvibes.com/images/logo.png"
+        };
+
+        // ===== API CONFIGURATION =====
+        const WEATHER_API_KEY = "63d52ff3d1bc4647938193819250804";
+        const HURRICANE_API_URL = "https://www.nhc.noaa.gov/gtwo.xml";
+
+        // ===== FIREBASE CONFIG =====
+        const firebaseConfig = {
+            apiKey: "AIzaSyCq35jwp6_LYZgfx1o84MXzv8BfYerVcj0",
+            authDomain: "stkittsnews-124f6.firebaseapp.com",
+            projectId: "stkittsnews-124f6",
+            storageBucket: "stkittsnews-124f6.appspot.com"
+        };
+
+        // Initialize Firebase
+        if (!firebase.apps.length) {
+            firebase.initializeApp(firebaseConfig);
+        }
+        const auth = firebase.auth();
+        const db = firebase.firestore();
+        const storage = firebase.storage();
+
+        // ===== WEATHER API =====
+        const WEATHER_API = (city) => 
+            `https://api.weatherapi.com/v1/current.json?key=${WEATHER_API_KEY}&q=${city}&aqi=no`;
+        
+        const WEATHER_FORECAST_API = (city) =>
+            `https://api.weatherapi.com/v1/forecast.json?key=${WEATHER_API_KEY}&q=${city}&days=3&aqi=no&alerts=no`;
+
+        // Caribbean capitals for weather
+        const CARIBBEAN_CAPITALS = [
+            { name: "Basseterre", country: "St. Kitts" },
+            { name: "Charlestown", country: "Nevis" },
+            { name: "St. John's", country: "Antigua" },
+            { name: "Bridgetown", country: "Barbados" },
+            { name: "Georgetown", country: "Guyana" },
+            { name: "Kingston", country: "Jamaica" },
+            { name: "Port of Spain", country: "Trinidad" }
+        ];
+
+        // ===== DOM ELEMENTS =====
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
+        const userDropdown = document.getElementById('userDropdown');
+        const userEmail = document.getElementById('userEmail');
+        const loginModal = document.getElementById('loginModal');
+        const loginForm = document.getElementById('loginForm');
+        const newsFeed = document.getElementById('newsFeed');
+        const localNewsFeed = document.getElementById('localNewsFeed');
+        const sknVibesFeed = document.getElementById('sknVibesFeed');
+        const reporterNewsFeed = document.getElementById('reporterNewsFeed');
+        const reporterNewsSection = document.getElementById('reporter-news');
+        const articleDetail = document.getElementById('articleDetail');
+        const dashboard = document.getElementById('dashboard');
+        const articleForm = document.getElementById('articleForm');
+        const articleImage = document.getElementById('articleImage');
+        const imagePreview = document.getElementById('imagePreview');
+        const previewImage = document.getElementById('previewImage');
+        const eventsFeed = document.getElementById('eventsFeed');
+        const refreshEventsBtn = document.getElementById('refreshEvents');
+        const contactForm = document.getElementById('contactForm');
+        const activeStorms = document.getElementById('active-storms');
+        const refreshBtn = document.getElementById('refreshNews');
+        const darkModeToggle = document.getElementById('darkModeToggle');
+        const newsletterForm = document.getElementById('newsletterForm');
+        
+        // Weather elements
+        const weatherDesc = document.getElementById('weather-desc');
+        const weatherTemp = document.getElementById('weather-temp');
+        const weatherWind = document.getElementById('weather-wind');
+        const weatherHumidity = document.getElementById('weather-humidity');
+        const weatherUv = document.getElementById('weather-uv');
+        const weatherForecast = document.getElementById('weatherForecast');
+
+        // ===== DARK MODE TOGGLE =====
+        function toggleDarkMode() {
+            document.body.classList.toggle('dark-mode');
+            const isDarkMode = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDarkMode);
+            
+            // Update toggle icon
+            const icon = darkModeToggle.querySelector('i');
+            if (isDarkMode) {
+                icon.classList.remove('fa-moon');
+                icon.classList.add('fa-sun');
+            } else {
+                icon.classList.remove('fa-sun');
+                icon.classList.add('fa-moon');
+            }
+        }
+
+        // Check for saved dark mode preference
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+            const icon = darkModeToggle.querySelector('i');
+            icon.classList.remove('fa-moon');
+            icon.classList.add('fa-sun');
+        }
+
+        darkModeToggle.addEventListener('click', toggleDarkMode);
+
+        // ===== SOCIAL SHARING FUNCTIONS =====
+        function shareOnFacebook() {
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://www.facebook.com/sharer/sharer.php?u=${url}`, '_blank');
+        }
+
+        function shareOnTwitter() {
+            const text = encodeURIComponent(document.title);
+            const url = encodeURIComponent(window.location.href);
+            window.open(`https://twitter.com/intent/tweet?text=${text}&url=${url}`, '_blank');
+        }
+
+        function shareOnWhatsApp() {
+            const text = encodeURIComponent(`${document.title} - ${window.location.href}`);
+            window.open(`https://wa.me/?text=${text}`, '_blank');
+        }
+
+        function shareViaEmail() {
+            const subject = encodeURIComponent(document.title);
+            const body = encodeURIComponent(`Check out this article: ${window.location.href}`);
+            window.open(`mailto:?subject=${subject}&body=${body}`);
+        }
+
+        // ===== LOAD SKN VIBES NEWS =====
+        async function loadSKNVibesNews() {
+            console.log("Loading news from SKN Vibes...");
+            sknVibesFeed.innerHTML = '<div class="loading-news">Loading news from SKN Vibes...</div>';
+            
+            try {
+                let articles = await scrapeNews(SKN_VIBES_SOURCE);
+                
+                if (articles.length > 0) {
+                    displayArticles(articles, sknVibesFeed);
+                } else {
+                    sknVibesFeed.innerHTML = '<div class="error-news"><p>No news found from SKN Vibes. Please try again later.</p></div>';
+                }
+            } catch (error) {
+                console.error("Error loading SKN Vibes news:", error);
+                sknVibesFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading SKN Vibes news. Please try refreshing.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ===== NEWS LOADING FUNCTIONS =====
+        async function loadAllNews() {
+            console.log("Loading news from all Caribbean sources...");
+            refreshBtn.classList.add('loading');
+            newsFeed.innerHTML = '<div class="loading-news">Loading latest news...</div>';
+            
+            try {
+                const allArticles = [];
+                
+                // Load from each source in parallel
+                await Promise.all(CARIBBEAN_NEWS_SOURCES.map(async (source) => {
+                    try {
+                        let articles = [];
+                        
+                        if (source.type === "scrape") {
+                            articles = await scrapeNews(source);
+                        } else {
+                            articles = await fetchRSSFeed(source);
+                        }
+                        
+                        allArticles.push(...articles);
+                    } catch (error) {
+                        console.error(`Error loading ${source.name}:`, error);
+                    }
+                }));
+                
+                // Sort by date and limit to 24 articles
+                const sortedArticles = allArticles
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 24);
+                
+                displayArticles(sortedArticles, newsFeed);
+                
+            } catch (error) {
+                console.error("Error loading news:", error);
+                newsFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading news. Please try refreshing.</p>
+                        <button onclick="loadAllNews()" class="btn btn-primary">Retry</button>
+                    </div>
+                `;
+            } finally {
+                refreshBtn.classList.remove('loading');
+            }
+        }
+
+        // ===== LOAD LOCAL NEWS =====
+        async function loadLocalNews() {
+            console.log("Loading local news from BuckieGotIt...");
+            localNewsFeed.innerHTML = '<div class="loading-news">Loading local news from BuckieGotIt...</div>';
+            
+            try {
+                // First try scraping
+                let articles = await scrapeLocalNews(LOCAL_NEWS_SOURCE);
+                
+                // If scraping fails, try RSS as fallback
+                if (articles.length === 0) {
+                    console.log("Scraping failed, trying RSS fallback...");
+                    articles = await fetchLocalRSSFeed();
+                }
+                
+                if (articles.length > 0) {
+                    displayArticles(articles, localNewsFeed);
+                } else {
+                    localNewsFeed.innerHTML = '<div class="error-news"><p>No local news found. Please try again later.</p></div>';
+                }
+            } catch (error) {
+                console.error("Error loading local news:", error);
+                localNewsFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading local news. Please try refreshing.</p>
+                    </div>
+                `;
+            }
+        }
+
+        // ===== LOCAL NEWS SCRAPER =====
+        async function scrapeLocalNews(source) {
+            console.log(`Scraping local news from ${source.name}...`);
+            try {
+                const proxyUrl = "https://api.allorigins.win/get?url=";
+                const encodedUrl = encodeURIComponent(source.url);
+                const response = await fetch(`${proxyUrl}${encodedUrl}`);
+                
+                if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const htmlDoc = parser.parseFromString(data.contents, "text/html");
+                
+                const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
+                
+                return articleLinks.slice(0, 6).map(link => ({
+                    title: link.textContent.trim(),
+                    url: link.getAttribute('href'),
+                    source: source.name,
+                    date: new Date().toISOString(),
+                    description: `Local news from ${source.name}`,
+                    imageUrl: source.image || "https://via.placeholder.com/300x200?text=Local+News"
+                }));
+            } catch (error) {
+                console.error("Error scraping local news:", error);
+                return [];
+            }
+        }
+
+        // ===== LOCAL RSS FETCHER (FALLBACK) =====
+        async function fetchLocalRSSFeed() {
+            console.log("Fetching local news via RSS fallback...");
+            try {
+                const rssUrl = "https://buckiegotit.com/feed/";
+                const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(rssUrl)}`;
+                const response = await fetch(rssProxy);
+                
+                if (!response.ok) throw new Error("Failed to fetch local RSS feed");
+                
+                const data = await response.json();
+                
+                return data.items.slice(0, 6).map(item => {
+                    let imageUrl = item.thumbnail || LOCAL_NEWS_SOURCE.image;
+                    
+                    // Try to extract image from content if not available
+                    if (!imageUrl && item.content) {
+                        const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                        if (imgMatch) {
+                            imageUrl = imgMatch[1];
+                        }
+                    }
+                    
+                    return {
+                        title: item.title,
+                        url: item.link,
+                        source: LOCAL_NEWS_SOURCE.name,
+                        date: item.pubDate,
+                        description: item.description || `Local news from ${LOCAL_NEWS_SOURCE.name}`,
+                        imageUrl: imageUrl || "https://via.placeholder.com/300x200?text=Local+News"
+                    };
+                });
+            } catch (error) {
+                console.error("Error fetching local RSS feed:", error);
+                return [];
+            }
+        }
+
+        // ===== NEWS SCRAPER =====
+        async function scrapeNews(source) {
+            console.log(`Scraping ${source.name}...`);
+            const proxyUrl = "https://api.allorigins.win/get?url=";
+            const encodedUrl = encodeURIComponent(source.url);
+            const response = await fetch(`${proxyUrl}${encodedUrl}`);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name}`);
+            
+            const data = await response.json();
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(data.contents, "text/html");
+            
+            const articleLinks = Array.from(htmlDoc.querySelectorAll(source.selector));
+            
+            return articleLinks.slice(0, 6).map(link => ({
+                title: link.textContent.trim(),
+                url: `${source.baseUrl}${link.getAttribute('href')}`,
+                source: source.name,
+                date: new Date().toISOString(),
+                description: `Latest news from ${source.name}`,
+                imageUrl: source.image || "https://via.placeholder.com/300x200?text=Caribbean+News"
+            }));
+        }
+
+        // ===== RSS FETCHER =====
+        async function fetchRSSFeed(source) {
+            console.log(`Fetching RSS from ${source.name}...`);
+            const rssProxy = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(source.url)}`;
+            const response = await fetch(rssProxy);
+            
+            if (!response.ok) throw new Error(`Failed to fetch ${source.name} RSS`);
+            
+            const data = await response.json();
+            
+            // Improved image extraction
+            return data.items.slice(0, 6).map(item => {
+                let imageUrl = item.thumbnail || source.image;
+                
+                // Try to extract image from content if not available
+                if (!imageUrl && item.content) {
+                    const imgMatch = item.content.match(/<img[^>]+src="([^">]+)"/);
+                    if (imgMatch) {
+                        imageUrl = imgMatch[1];
+                    }
+                }
+                
+                // Final fallback
+                if (!imageUrl) {
+                    imageUrl = "https://via.placeholder.com/300x200?text=" + encodeURIComponent(source.name);
+                }
+                
+                return {
+                    title: item.title,
+                    url: item.link,
+                    source: source.name,
+                    date: item.pubDate,
+                    description: item.description || `Read more on ${source.name}`,
+                    imageUrl: imageUrl
+                };
+            });
+        }
+
+        // ===== DISPLAY ARTICLES =====
+        function displayArticles(articles, container) {
+            if (!articles || articles.length === 0) {
+                container.innerHTML = '<div class="error-news"><p>No articles found. Please try again later.</p></div>';
+                return;
+            }
+            
+            container.innerHTML = articles.map(article => `
+                <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                    <div class="news-image">
+                        <img src="${article.imageUrl}" 
+                             alt="${article.title}" 
+                             loading="lazy"
+                             onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
+                        <div class="image-fallback" style="display: none;">
+                            ${article.source}<br>${article.title}
+                        </div>
+                    </div>
+                    <div class="news-content">
+                        <span class="news-source">${article.source}</span>
+                        <h3 class="news-title">${article.title}</h3>
+                        <p>${article.description.substring(0, 100)}...</p>
+                        <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                        <a href="${article.url}" target="_blank" class="news-link">Read More</a>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== PAGE NAVIGATION =====
+        function showSection(section) {
+            console.log(`Showing section: ${section}`);
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('article-section').style.display = 'none';
+            document.getElementById('about-section').style.display = 'none';
+            document.getElementById('contact-section').style.display = 'none';
+            document.getElementById('weather-section').style.display = 'none';
+            document.getElementById('hurricane-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
+            
+            // Show selected section
+            const sectionEl = document.getElementById(`${section}-section`);
+            if (sectionEl) {
+                sectionEl.style.display = 'block';
+            }
+            
+            // Load appropriate data
+            switch(section) {
+                case 'home':
+                    loadLocalNews();
+                    loadSKNVibesNews();
+                    loadAllNews();
+                    break;
+                case 'weather':
+                    loadWeather();
+                    break;
+                case 'hurricane':
+                    loadHurricaneData();
+                    break;
+                case 'events':
+                    loadEvents();
+                    break;
+            }
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ===== SHOW ARTICLE DETAIL =====
+        function showArticleDetail(article) {
+            // Hide all sections
+            document.getElementById('home-section').style.display = 'none';
+            document.getElementById('article-section').style.display = 'block';
+            document.getElementById('about-section').style.display = 'none';
+            document.getElementById('contact-section').style.display = 'none';
+            document.getElementById('weather-section').style.display = 'none';
+            document.getElementById('hurricane-section').style.display = 'none';
+            document.getElementById('events-section').style.display = 'none';
+            
+            // Populate article detail
+            articleDetail.innerHTML = `
+                <div class="article-header">
+                    <span class="article-source">${article.source || "KAUS News"}</span>
+                    <span class="article-date">${new Date(article.publishedAt || article.date).toLocaleDateString()}</span>
+                    <h1 class="article-title">${article.title}</h1>
+                    <div class="article-meta">
+                        <span>By ${article.author || "KAUS Reporter"}</span>
+                    </div>
+                </div>
+                
+                <div style="position: relative; height: 400px;">
+                    <img src="${article.urlToImage || article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                         alt="${article.title}" 
+                         class="article-image"
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-fallback" style="display: none; height: 400px; font-size: 1.5rem;">
+                        ${article.source}<br>${article.title}
+                    </div>
+                </div>
+                
+                <div class="article-content">
+                    ${article.content ? article.content.replace(/\n/g, '<p>') : 
+                      `<p>${article.description || article.excerpt || 'No content available'}</p>`}
+                    
+                    ${article.url ? `<p><a href="${article.url}" target="_blank" class="btn btn-primary">Read Full Story on Original Site</a></p>` : ''}
+                </div>
+                
+                <a href="#" onclick="showSection('home'); return false;" class="back-link">
+                    <i class="fas fa-arrow-left"></i> Back to News
+                </a>
+            `;
+            
+            // Show social sharing buttons
+            document.getElementById('socialSharing').style.display = 'flex';
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+
+        // ===== LOAD WEATHER =====
+        async function loadWeather() {
+            console.log("Loading weather data...");
+            try {
+                // Load St. Kitts weather
+                const response = await fetch(WEATHER_API("Basseterre"));
+                if (!response.ok) throw new Error("Weather API failed");
+                const data = await response.json();
+                
+                weatherDesc.textContent = data.current.condition.text;
+                weatherTemp.textContent = `${data.current.temp_c}°C`;
+                weatherWind.textContent = `${data.current.wind_kph} km/h`;
+                weatherHumidity.textContent = `${data.current.humidity}%`;
+                weatherUv.textContent = data.current.uv;
+                
+                // Load forecast
+                const forecastResponse = await fetch(WEATHER_FORECAST_API("Basseterre"));
+                if (!forecastResponse.ok) throw new Error("Weather forecast API failed");
+                const forecastData = await forecastResponse.json();
+                
+                // Display 3-day forecast
+                weatherForecast.innerHTML = '';
+                forecastData.forecast.forecastday.slice(0, 3).forEach(day => {
+                    const date = new Date(day.date);
+                    const dayName = date.toLocaleDateString('en-US', { weekday: 'short' });
+                    const weatherIcon = getWeatherIcon(day.day.condition.code);
+                    
+                    weatherForecast.innerHTML += `
+                        <div class="forecast-day">
+                            <h4>${dayName}</h4>
+                            <div class="forecast-icon">
+                                <i class="fas ${weatherIcon}"></i>
+                            </div>
+                            <p>${day.day.condition.text}</p>
+                            <div class="forecast-temp">
+                                <span class="forecast-high">${Math.round(day.day.maxtemp_c)}°</span>
+                                <span class="forecast-low">${Math.round(day.day.mintemp_c)}°</span>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                // Load other islands weather
+                const weatherGrid = document.getElementById('weather-grid');
+                weatherGrid.innerHTML = '';
+                
+                for (const capital of CARIBBEAN_CAPITALS) {
+                    try {
+                        const islandResponse = await fetch(WEATHER_API(capital.name));
+                        if (!islandResponse.ok) continue;
+                        const islandData = await islandResponse.json();
+                        
+                        weatherGrid.innerHTML += `
+                            <div class="weather-card">
+                                <div class="weather-header">
+                                    <div>
+                                        <h4>${capital.name}, ${capital.country}</h4>
+                                        <p>${islandData.current.condition.text}</p>
+                                    </div>
+                                    <div class="weather-temp">${islandData.current.temp_c}°C</div>
+                                </div>
+                                <div class="weather-details">
+                                    <div class="weather-detail">
+                                        <i class="fas fa-wind"></i>
+                                        <p>${islandData.current.wind_kph} km/h</p>
+                                    </div>
+                                    <div class="weather-detail">
+                                        <i class="fas fa-tint"></i>
+                                        <p>${islandData.current.humidity}%</p>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    } catch (error) {
+                        console.error(`Error loading weather for ${capital.name}:`, error);
+                    }
+                }
+                
+            } catch (error) {
+                console.error("Error loading weather:", error);
+                weatherDesc.textContent = "Weather data unavailable";
+                weatherTemp.textContent = "--°C";
+                weatherWind.textContent = "-- km/h";
+                weatherHumidity.textContent = "--%";
+                weatherUv.textContent = "--";
+                weatherForecast.innerHTML = '<p>Forecast data unavailable</p>';
+            }
+        }
+
+        // Helper function to get weather icon based on condition code
+        function getWeatherIcon(code) {
+            // This is a simplified version - you can expand it based on the weather API's condition codes
+            if (code === 1000) return 'fa-sun'; // Sunny
+            if (code === 1003) return 'fa-cloud-sun'; // Partly cloudy
+            if (code === 1006 || code === 1009) return 'fa-cloud'; // Cloudy
+            if (code >= 1063 && code <= 1201) return 'fa-cloud-rain'; // Rain
+            if (code >= 1204 && code <= 1237) return 'fa-snowflake'; // Snow
+            if (code >= 1240 && code <= 1264) return 'fa-cloud-showers-heavy'; // Heavy rain
+            if (code >= 1273 && code <= 1282) return 'fa-bolt'; // Thunderstorm
+            return 'fa-cloud';
+        }
+
+        // ===== LOAD HURRICANE DATA =====
+        async function loadHurricaneData() {
+            console.log("Loading hurricane data...");
+            try {
+                // Fetch the NHC RSS feed
+                const response = await fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(HURRICANE_API_URL));
+                if (!response.ok) throw new Error("Failed to fetch hurricane data");
+                
+                const data = await response.json();
+                const parser = new DOMParser();
+                const xmlDoc = parser.parseFromString(data.contents, "text/xml");
+                
+                // Parse the XML data
+                const storms = [];
+                const items = xmlDoc.getElementsByTagName("item");
+                
+                for (let i = 0; i < items.length; i++) {
+                    const title = items[i].getElementsByTagName("title")[0].textContent;
+                    const description = items[i].getElementsByTagName("description")[0].textContent;
+                    
+                    // Extract storm details from description
+                    const detailsMatch = description.match(/A (.*?) is located near (.*?) with maximum sustained winds of (.*?)\./);
+                    
+                    if (detailsMatch) {
+                        storms.push({
+                            name: title.replace("Atlantic Tropical Weather Outlook", "").trim(),
+                            category: detailsMatch[1],
+                            location: detailsMatch[2],
+                            winds: detailsMatch[3],
+                            description: description
+                        });
+                    }
+                }
+                
+                if (storms.length > 0) {
+                    // Display active storms
+                    activeStorms.innerHTML = storms.map(storm => `
+                        <div class="storm-card">
+                            <div class="storm-name">${storm.name} - ${storm.category}</div>
+                            <div class="storm-details">
+                                <p><strong>Location:</strong> ${storm.location}</p>
+                                <p><strong>Max Winds:</strong> ${storm.winds}</p>
+                                <p>${storm.description}</p>
+                            </div>
+                        </div>
+                    `).join('');
+                } else {
+                    activeStorms.innerHTML = '<p>No active tropical systems at this time.</p>';
+                }
+                
+            } catch (error) {
+                console.error("Error loading hurricane data:", error);
+                activeStorms.innerHTML = '<p>Unable to load current storm data. Please check back later.</p>';
+            }
+        }
+
+        // ===== LOAD REPORTER'S NEWS =====
+        async function loadReporterNews() {
+            console.log("Loading reporter's news...");
+            try {
+                // Load from Firestore
+                const querySnapshot = await db.collection("articles").orderBy("date", "desc").limit(6).get();
+                
+                if (querySnapshot.empty) {
+                    reporterNewsFeed.innerHTML = '<p>No articles published yet.</p>';
+                    return;
+                }
+                
+                reporterNewsFeed.innerHTML = '';
+                
+                querySnapshot.forEach(doc => {
+                    const article = doc.data();
+                    reporterNewsFeed.innerHTML += `
+                        <div class="news-card" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')})">
+                            <div class="news-image">
+                                <img src="${article.imageUrl || 'https://images.unsplash.com/photo-1464037866556-6812c9d1c72e?ixlib=rb-4.0.3&auto=format&fit=crop&w=1470&q=80'}" 
+                                     alt="${article.title}"
+                                     onerror="this.classList.add('error'); this.nextElementSibling.style.display = 'flex';">
+                                <div class="image-fallback" style="display: none;">
+                                    KAUS News<br>${article.title}
+                                </div>
+                            </div>
+                            <div class="news-content">
+                                <span class="news-source">KAUS News</span>
+                                <h3 class="news-title">${article.title}</h3>
+                                <p>${article.excerpt.substring(0, 100)}...</p>
+                                <p class="news-date">${new Date(article.date).toLocaleDateString()}</p>
+                                <a href="#" onclick="showArticleDetail(${JSON.stringify(article).replace(/"/g, '&quot;')}); return false;" class="news-link">Read Full Story</a>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+            } catch (error) {
+                console.error("Error loading reporter's news:", error);
+                reporterNewsFeed.innerHTML = '<p>Error loading articles. Please try again later.</p>';
+            }
+        }
+
+        // ===== LOAD EVENTS =====
+        async function loadEvents() {
+            console.log("Loading Caribbean events...");
+            refreshEventsBtn.classList.add('loading');
+            eventsFeed.innerHTML = '<div class="loading-events">Loading events...</div>';
+            
+            try {
+                const response = await fetch('/.netlify/functions/getEvents');
+                if (!response.ok) throw new Error("Events API failed");
+                
+                const events = await response.json();
+                displayEvents(events);
+                
+            } catch (error) {
+                console.error("Error loading events:", error);
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>Error loading events. <button onclick="loadEvents()" class="btn btn-primary">Retry</button></p>
+                    </div>
+                `;
+            } finally {
+                refreshEventsBtn.classList.remove('loading');
+            }
+        }
+
+        // ===== DISPLAY EVENTS =====
+        function displayEvents(events) {
+            if (!events || events.length === 0) {
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>No upcoming events found.</p>
+                        <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Filter out past events and sort by date
+            const upcomingEvents = events
+                .filter(event => new Date(event.date) >= new Date())
+                .sort((a, b) => new Date(a.date) - new Date(b.date));
+
+            if (upcomingEvents.length === 0) {
+                eventsFeed.innerHTML = `
+                    <div class="error-events">
+                        <p>No upcoming events scheduled. Check back later!</p>
+                        <button onclick="loadEvents()" class="btn btn-primary">Refresh Events</button>
+                    </div>
+                `;
+                return;
+            }
+
+            eventsFeed.innerHTML = upcomingEvents.map(event => `
+                <div class="event-card">
+                    <div class="event-date">
+                        <div class="event-day">${new Date(event.date).getDate()}</div>
+                        <div class="event-month">${new Date(event.date).toLocaleString('default', { month: 'short' })}</div>
+                    </div>
+                    <div class="event-details">
+                        <span class="event-source">${event.source || 'Caribbean Event'}</span>
+                        <h3 class="event-title">${event.title}</h3>
+                        <div class="event-location">
+                            <i class="fas fa-map-marker-alt"></i> ${event.location || 'Caribbean'}
+                        </div>
+                        ${event.description ? `<p class="event-description">${event.description.substring(0, 120)}...</p>` : ''}
+                        ${event.url ? `<a href="${event.url}" target="_blank" class="event-link">More details <i class="fas fa-external-link-alt"></i></a>` : ''}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // ===== CONTACT FORM =====
+        contactForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const name = document.getElementById('contact-name').value;
+            const email = document.getElementById('contact-email').value;
+            const message = document.getElementById('contact-message').value;
+            
+            try {
+                // Netlify will handle the form submission
+                console.log("Contact form submitted:", { name, email, message });
+                alert('Thank you for your message! We will get back to you soon.');
+                contactForm.reset();
+                
+            } catch (error) {
+                console.error("Error submitting contact form:", error);
+                alert("Error submitting form. Please try again.");
+            }
+        });
+
+        // ===== NEWSLETTER FORM =====
+        newsletterForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const email = newsletterForm.querySelector('input').value;
+            
+            try {
+                // Netlify will handle the form submission
+                console.log("Newsletter form submitted:", { email });
+                alert('Thank you for subscribing to our newsletter!');
+                newsletterForm.reset();
+                
+            } catch (error) {
+                console.error("Error submitting newsletter form:", error);
+                alert("Error submitting form. Please try again.");
+            }
+        });
+
+        // ===== ARTICLE FORM =====
+        articleForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log("Article form submitted");
+            
+            const title = document.getElementById('articleTitle').value;
+            const excerpt = document.getElementById('articleExcerpt').value;
+            const content = document.getElementById('articleContent').value;
+            const category = document.getElementById('articleCategory').value;
+            const location = document.getElementById('articleLocation').value;
+            const imageFile = articleImage.files[0];
+            
+            try {
+                // Upload image to Firebase Storage if one was selected
+                let imageUrl = '';
+                if (imageFile) {
+                    const storageRef = storage.ref();
+                    const fileRef = storageRef.child(`articles/${Date.now()}_${imageFile.name}`);
+                    await fileRef.put(imageFile);
+                    imageUrl = await fileRef.getDownloadURL();
+                }
+                
+                // Save article to Firestore
+                await db.collection("articles").add({
+                    title,
+                    excerpt,
+                    content,
+                    category,
+                    location,
+                    imageUrl,
+                    date: new Date().toISOString(),
+                    author: auth.currentUser.email
+                });
+                
+                alert('Article published successfully!');
+                articleForm.reset();
+                imagePreview.classList.remove('show');
+                
+                // Reload reporter's news
+                loadReporterNews();
+                
+            } catch (error) {
+                console.error("Error publishing article:", error);
+                alert("Error publishing article: " + error.message);
+            }
+        });
+
+        // ===== AUTHENTICATION =====
+        auth.onAuthStateChanged(user => {
+            if (user) {
+                // User is logged in
+                console.log("User logged in:", user.email);
+                loginBtn.style.display = 'none';
+                userDropdown.style.display = 'block';
+                userEmail.textContent = user.email;
+                loginModal.classList.remove('show');
+                dashboard.style.display = 'block';
+                reporterNewsSection.style.display = 'block';
+                loadReporterNews();
+            } else {
+                // User is logged out
+                console.log("User logged out");
+                loginBtn.style.display = 'block';
+                userDropdown.style.display = 'none';
+                dashboard.style.display = 'none';
+                reporterNewsSection.style.display = 'none';
+            }
+            
+            // Always load news (whether logged in or not)
+            loadLocalNews();
+            loadSKNVibesNews();
+            loadAllNews();
+        });
+
+        // ===== EVENT LISTENERS =====
+        loginBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Login button clicked");
+            loginModal.classList.add('show');
+        });
+
+        logoutBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            console.log("Logout button clicked");
+            auth.signOut();
+        });
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            console.log("Login form submitted");
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                await auth.signInWithEmailAndPassword(email, password);
+            } catch (error) {
+                console.error("Login failed:", error);
+                alert("Login failed: " + error.message);
+            }
+        });
+
+        articleImage.addEventListener('change', (e) => {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (event) => {
+                    previewImage.src = event.target.result;
+                    imagePreview.classList.add('show');
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Navigation click handlers
+        document.querySelectorAll('.nav-links a').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('data-section');
+                showSection(section);
+            });
+        });
+
+        // Close modal when clicking outside
+        loginModal.addEventListener('click', (e) => {
+            if (e.target === loginModal) {
+                loginModal.classList.remove('show');
+            }
+        });
+
+        // Refresh button handlers
+        refreshBtn.addEventListener('click', () => {
+            loadLocalNews();
+            loadSKNVibesNews();
+            loadAllNews();
+        });
+
+        refreshEventsBtn.addEventListener('click', () => {
+            loadEvents();
+        });
+
+        // Initialize the page
+        document.addEventListener('DOMContentLoaded', () => {
+            console.log("Page loaded");
+            showSection('home');
+        });
+    </script>
+</body>
+</html>
