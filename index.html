@@ -1385,41 +1385,87 @@
    
     
     <!-- FOOTER -->
-    <footer>
-        <div class="container">
-            <div class="footer-content">
-                <div class="footer-column">
-                    <h3>KAUS News</h3>
-                    <p>Your trusted source for Caribbean news, weather, and events.</p>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Islands We Cover</h3>
-                    <ul>
-                        <li><a href="#">St. Kitts & Nevis</a></li>
-                        <li><a href="#">Antigua & Barbuda</a></li>
-                        <li><a href="#">Barbados</a></li>
-                        <li><a href="#">Guyana</a></li>
-                        <li><a href="#">Jamaica</a></li>
-                        <li><a href="#">Trinidad & Tobago</a></li>
-                    </ul>
-                </div>
-                
-                <div class="footer-column">
-                    <h3>Contact</h3>
-                    <ul>
-                        <li><i class="fas fa-phone"></i> (869) 555-NEWS</li>
-                        <li><i class="fas fa-envelope"></i> info@kausnews.com</li>
-                        <li><i class="fas fa-map-marker-alt"></i> Basseterre, St. Kitts</li>
-                    </ul>
-                </div>
+<footer>
+    <style>
+        /* Footer Styling */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0;
+            font-family: Arial, sans-serif;
+        }
+
+        footer .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+        }
+
+        footer .footer-column {
+            flex: 1;
+            margin-right: 30px;
+        }
+
+        footer .footer-column h3 {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        footer .footer-column p {
+            font-size: 16px;
+            line-height: 1.6;
+        }
+
+        footer .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        footer .footer-column ul li {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        footer .footer-column ul li:hover {
+            text-decoration: underline;
+        }
+
+        footer .footer-column a {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
+
+        footer .footer-column a:hover {
+            text-decoration: underline;
+        }
+    </style>
+    <div class="container">
+        <div class="footer-content">
+            <div class="footer-column">
+                <h3>KAUS News</h3>
+                <p>Your trusted source for Caribbean news, weather, and events.</p>
             </div>
             
-            <div class="copyright">
-                <p>&copy; 2023 KAUS News. All rights reserved.</p>
+            <div class="footer-column">
+                <h3>Islands We Cover</h3>
+                <ul>
+                    <li>Island 1</li>
+                    <li>Island 2</li>
+                    <li>Island 3</li>
+                </ul>
             </div>
         </div>
-    </footer>
+    </div>
+</footer>
+
     
     <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
