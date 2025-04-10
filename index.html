@@ -2498,6 +2498,15 @@
             console.log("Page loaded");
             showSection('home');
         });
+        // Hook up nav menu clicks to section switching
+navLinks.forEach(link => {
+    link.addEventListener('click', function(e) {
+        e.preventDefault(); // Prevent default anchor behavior
+        const section = this.getAttribute('data-section');
+        showSection(section); // Call the function to show the right section
+    });
+});
+
     </script>
 </body>
 </html>
