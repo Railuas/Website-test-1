@@ -139,6 +139,12 @@
             background: rgba(255,255,255,0.1);
         }
         
+        /* Active navigation link */
+        .nav-links li a.active {
+            background: var(--primary);
+            font-weight: bold;
+        }
+        
         /* ===== HERO SECTION ===== */
         .hero {
             background: linear-gradient(rgba(0,0,0,0.5), rgba(0,0,0,0.5)), url('https://images.unsplash.com/photo-1564501049412-61c2a3083791?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1632&q=80');
@@ -1024,7 +1030,7 @@
     <nav>
         <div class="container">
             <ul class="nav-links">
-                <li><a href="#" data-section="home">Home</a></li>
+                <li><a href="#" data-section="home" class="active">Home</a></li>
                 <li><a href="#" data-section="about">About</a></li>
                 <li><a href="#" data-section="contact">Contact</a></li>
                 <li><a href="#" data-section="weather">Weather</a></li>
@@ -1382,89 +1388,87 @@
         <i class="fas fa-moon"></i>
     </button>
     
-   
-    
     <!-- FOOTER -->
-<footer>
-    <div class="container">
-        <div class="footer-content">
-            <div class="footer-column">
-                <h3>About KAUS News</h3>
-                <p>KAUS News is the premier news organization in St. Kitts and Nevis, delivering accurate, timely news since 2023.</p>
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>About KAUS News</h3>
+                    <p>KAUS News is the premier news organization in St. Kitts and Nevis, delivering accurate, timely news since 2023.</p>
+                </div>
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul>
+                        <li><a href="#" data-section="about">About Us</a></li>
+                        <li><a href="#" data-section="contact">Contact</a></li>
+                        <li><a href="#">Advertise</a></li>
+                        <li><a href="#">Careers</a></li>
+                        <li><a href="#">Privacy Policy</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Basseterre, St. Kitts</p>
+                    <p><i class="fas fa-phone"></i> +1 (869) 555-NEWS</p>
+                    <p><i class="fas fa-envelope"></i> info@kausnews.com</p>
+                </div>
             </div>
-            <div class="footer-column">
-                <h3>Quick Links</h3>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Advertise</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Privacy Policy</a></li>
-                </ul>
-            </div>
-            <div class="footer-column">
-                <h3>Contact Us</h3>
-                <p><i class="fas fa-map-marker-alt"></i> Basseterre, St. Kitts</p>
-                <p><i class="fas fa-phone"></i> +1 (869) 555-NEWS</p>
-                <p><i class="fas fa-envelope"></i> info@kausnews.com</p>
+            <div style="text-align: center; margin-top: 30px;">
+                <p>&copy; 2023 KAUS News. All rights reserved.</p>
             </div>
         </div>
-        <div style="text-align: center; margin-top: 30px;">
-            <p>&copy; 2023 KAUS News. All rights reserved.</p>
-        </div>
-    </div>
-</footer>
+    </footer>
 
-<style>
-    /* ===== FOOTER STYLES ===== */
-    footer {
-        background-color: #2c3e50;
-        color: #ecf0f1;
-        padding: 40px 0;
-        font-family: var(--font-main);
-    }
+    <style>
+        /* ===== FOOTER STYLES ===== */
+        footer {
+            background-color: #2c3e50;
+            color: #ecf0f1;
+            padding: 40px 0;
+            font-family: var(--font-main);
+        }
 
-    footer .footer-content {
-        display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
-        gap: 30px;
-    }
+        footer .footer-content {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 30px;
+        }
 
-    .footer-column {
-        flex: 1;
-        min-width: 250px;
-    }
+        .footer-column {
+            flex: 1;
+            min-width: 250px;
+        }
 
-    .footer-column h3 {
-        font-size: 1.2rem;
-        margin-bottom: 15px;
-    }
+        .footer-column h3 {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+        }
 
-    .footer-column p,
-    .footer-column ul li {
-        font-size: 0.95rem;
-        line-height: 1.6;
-    }
+        .footer-column p,
+        .footer-column ul li {
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
 
-    .footer-column ul {
-        list-style: none;
-        padding: 0;
-    }
+        .footer-column ul {
+            list-style: none;
+            padding: 0;
+        }
 
-    .footer-column ul li {
-        margin-bottom: 8px;
-    }
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
 
-    .footer-column a {
-        color: #ecf0f1;
-        text-decoration: none;
-    }
+        .footer-column a {
+            color: #ecf0f1;
+            text-decoration: none;
+        }
 
-    .footer-column a:hover {
-        text-decoration: underline;
-    }
-</style>
+        .footer-column a:hover {
+            text-decoration: underline;
+        }
+    </style>
     
     <!-- FIREBASE SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
@@ -1619,6 +1623,7 @@
         const refreshBtn = document.getElementById('refreshNews');
         const darkModeToggle = document.getElementById('darkModeToggle');
         const newsletterForm = document.getElementById('newsletterForm');
+        const navLinks = document.querySelectorAll('.nav-links a');
         
         // Weather elements
         const weatherDesc = document.getElementById('weather-desc');
@@ -1955,6 +1960,14 @@
                 sectionEl.style.display = 'block';
             }
             
+            // Update active nav link
+            navLinks.forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-section') === section) {
+                    link.classList.add('active');
+                }
+            });
+            
             // Load appropriate data
             switch(section) {
                 case 'home':
@@ -1987,6 +2000,9 @@
             document.getElementById('weather-section').style.display = 'none';
             document.getElementById('hurricane-section').style.display = 'none';
             document.getElementById('events-section').style.display = 'none';
+            
+            // Remove active class from all nav links
+            navLinks.forEach(link => link.classList.remove('active'));
             
             // Populate article detail
             articleDetail.innerHTML = `
@@ -2451,7 +2467,7 @@
         });
 
         // Navigation click handlers
-        document.querySelectorAll('.nav-links a').forEach(link => {
+        navLinks.forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
                 const section = link.getAttribute('data-section');
