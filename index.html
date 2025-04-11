@@ -1314,6 +1314,16 @@
             border-radius: 8px;
             margin-top: 20px;
         }
+
+        /* Additional debug styles */
+        .debug-info {
+            font-size: 0.8rem;
+            color: #666;
+            margin-top: 10px;
+        }
+        body.dark-mode .debug-info {
+            color: #aaa;
+        }
     </style>
 </head>
 <body>
@@ -1591,12 +1601,19 @@
             </div>
         </section>
         
-        <!-- EVENTS SECTION -->
+        <!-- EVENTS SECTION - Updated with debug info -->
         <section id="events-section" class="container" style="display:none;">
-            <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
-            <div class="events-section" id="eventsFeed">
-                <!-- Events will load here -->
+            <div class="refresh-container">
+                <h2><i class="fas fa-calendar-alt"></i> Caribbean Events</h2>
+                <button id="refreshEvents" class="refresh-btn">
+                    <i class="fas fa-sync-alt spinner"></i>
+                    <span class="text">Refresh Events</span>
+                </button>
             </div>
+            <div class="events-section" id="eventsFeed">
+                <div class="loading-news">Loading events...</div>
+            </div>
+            <div id="eventsDebug" class="debug-info"></div>
         </section>
         
         <!-- DASHBOARD (Reporter View) -->
@@ -1891,6 +1908,8 @@
         const imagePreview = document.getElementById('imagePreview');
         const previewImage = document.getElementById('previewImage');
         const eventsFeed = document.getElementById('eventsFeed');
+        const eventsDebug = document.getElementById('eventsDebug');
+        const refreshEvents = document.getElementById('refreshEvents');
         const contactForm = document.getElementById('contactForm');
         const activeStorms = document.getElementById('active-storms');
         const refreshBtn = document.getElementById('refreshNews');
@@ -1977,74 +1996,59 @@
             }
         }
 
-        // ===== CARIBBEAN EVENTS SCRAPER =====
+        // ===== ENHANCED CARIBBEAN EVENTS SCRAPER =====
         async function scrapeCaribbeanEvents(source) {
             console.log("Scraping Caribbean Events...");
+            eventsDebug.textContent = `Scraping ${source.name}...`;
+            
             try {
                 const proxyUrl = "https://api.allorigins.win/get?url=";
                 const encodedUrl = encodeURIComponent(source.url);
                 const response = await fetch(`${proxyUrl}${encodedUrl}`);
                 
-                if (!response.ok) throw new Error("Failed to fetch Caribbean Events");
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const data = await response.json();
                 const parser = new DOMParser();
                 const htmlDoc = parser.parseFromString(data.contents, "text/html");
                 
                 const events = [];
-                const eventElements = htmlDoc.querySelectorAll('.event-card');
+                const eventElements = htmlDoc.querySelectorAll('.event-card, .event-item');
+                
+                console.log(`Found ${eventElements.length} event elements`);
+                eventsDebug.textContent += ` Found ${eventElements.length} events.`;
                 
                 for (let i = 0; i < Math.min(eventElements.length, 5); i++) {
                     const event = eventElements[i];
-                    const titleElement = event.querySelector('.event-title a');
-                    const dateElement = event.querySelector('.event-date');
-                    const locationElement = event.querySelector('.event-location');
-                    const descriptionElement = event.querySelector('.event-excerpt');
-                    const imageElement = event.querySelector('.event-image img');
-                    const ticketLinkElement = event.querySelector('.event-tickets a');
-                    
-                    if (titleElement) {
+                    try {
+                        const titleElement = event.querySelector('.event-title a, h3 a');
+                        if (!titleElement) continue;
+                        
                         const title = titleElement.textContent.trim();
                         const url = `${source.baseUrl}${titleElement.getAttribute('href')}`;
-                        const dateText = dateElement ? dateElement.textContent.trim() : '';
-                        const location = locationElement ? locationElement.textContent.trim() : 'Caribbean';
-                        const description = descriptionElement ? descriptionElement.textContent.trim() : '';
-                        const imageUrl = imageElement ? imageElement.getAttribute('src') : source.image;
-                        const ticketUrl = ticketLinkElement ? ticketLinkElement.getAttribute('href') : '';
                         
-                        // Parse date (this is a simple example, you might need to adjust based on actual date format)
+                        // Get other elements with more flexible selectors
+                        const dateElement = event.querySelector('.event-date, .date');
+                        const locationElement = event.querySelector('.event-location, .location');
+                        const descriptionElement = event.querySelector('.event-excerpt, .description');
+                        const imageElement = event.querySelector('.event-image img, img');
+                        const ticketLinkElement = event.querySelector('.event-tickets a, .tickets a');
+                        
+                        const dateText = dateElement?.textContent.trim() || '';
+                        const location = locationElement?.textContent.trim() || 'Caribbean';
+                        const description = descriptionElement?.textContent.trim() || '';
+                        const imageUrl = imageElement?.getAttribute('src') || source.image;
+                        const ticketUrl = ticketLinkElement?.getAttribute('href') || '';
+                        
+                        // Parse date with more flexible format
                         let eventDate = new Date();
                         if (dateText) {
-                            // Try to extract date parts (this is a simplified approach)
-                            const dateMatch = dateText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+                            // Try multiple date formats
+                            const dateMatch = dateText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/) || 
+                                             dateText.match(/(\w+) (\d{1,2}), (\d{4})/);
                             if (dateMatch) {
-                                eventDate = new Date(`${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`);
+                                eventDate = new Date(dateMatch[3], dateMatch[2] - 1, dateMatch[1]);
                             }
-                        }
-                        
-                        // Fetch event details to get more information
-                        let eventDetails = {};
-                        try {
-                            const eventResponse = await fetch(`${proxyUrl}${encodeURIComponent(url)}`);
-                            if (eventResponse.ok) {
-                                const eventData = await eventResponse.json();
-                                const eventParser = new DOMParser();
-                                const eventHtml = eventParser.parseFromString(eventData.contents, "text/html");
-                                
-                                // Extract additional details
-                                const detailsElement = eventHtml.querySelector('.event-details');
-                                const directionsElement = eventHtml.querySelector('.event-directions');
-                                const ticketInfoElement = eventHtml.querySelector('.ticket-info');
-                                
-                                eventDetails = {
-                                    details: detailsElement ? detailsElement.innerHTML : description,
-                                    directions: directionsElement ? directionsElement.innerHTML : '',
-                                    ticketInfo: ticketInfoElement ? ticketInfoElement.innerHTML : '',
-                                    fullImageUrl: eventHtml.querySelector('.event-featured-image img')?.getAttribute('src') || imageUrl
-                                };
-                            }
-                        } catch (error) {
-                            console.error("Error fetching event details:", error);
                         }
                         
                         events.push({
@@ -2054,91 +2058,80 @@
                             date: eventDate.toISOString(),
                             description,
                             location,
-                            imageUrl: eventDetails.fullImageUrl ? `${source.baseUrl}${eventDetails.fullImageUrl}` : (imageUrl ? `${source.baseUrl}${imageUrl}` : source.image),
+                            imageUrl: imageUrl.startsWith('http') ? imageUrl : `${source.baseUrl}${imageUrl}`,
                             ticketUrl,
-                            details: eventDetails.details,
-                            directions: eventDetails.directions,
-                            ticketInfo: eventDetails.ticketInfo,
                             type: 'event'
                         });
+                        
+                    } catch (error) {
+                        console.error(`Error processing event ${i}:`, error);
                     }
                 }
                 
                 return events;
+                
             } catch (error) {
                 console.error("Error scraping Caribbean Events:", error);
+                eventsDebug.textContent += ` Error: ${error.message}`;
                 return [];
             }
         }
 
-        // ===== ST. KITTS MUSIC FESTIVAL SCRAPER =====
+        // ===== ENHANCED ST. KITTS MUSIC FESTIVAL SCRAPER =====
         async function scrapeStKittsMusicFestival(source) {
             console.log("Scraping St. Kitts Music Festival...");
+            eventsDebug.textContent += `\nScraping ${source.name}...`;
+            
             try {
                 const proxyUrl = "https://api.allorigins.win/get?url=";
                 const encodedUrl = encodeURIComponent(source.url);
                 const response = await fetch(`${proxyUrl}${encodedUrl}`);
                 
-                if (!response.ok) throw new Error("Failed to fetch St. Kitts Music Festival");
+                if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
                 
                 const data = await response.json();
                 const parser = new DOMParser();
                 const htmlDoc = parser.parseFromString(data.contents, "text/html");
                 
                 const events = [];
-                const eventElements = htmlDoc.querySelectorAll('.event-item');
+                // More flexible selector for events
+                const eventElements = htmlDoc.querySelectorAll('.event-item, .event-card, .event');
+                
+                console.log(`Found ${eventElements.length} event elements`);
+                eventsDebug.textContent += ` Found ${eventElements.length} events.`;
                 
                 for (let i = 0; i < Math.min(eventElements.length, 5); i++) {
                     const event = eventElements[i];
-                    const titleElement = event.querySelector('.event-title a');
-                    const dateElement = event.querySelector('.event-date');
-                    const locationElement = event.querySelector('.event-location');
-                    const descriptionElement = event.querySelector('.event-description');
-                    const imageElement = event.querySelector('.event-image img');
-                    const ticketLinkElement = event.querySelector('.event-tickets a');
-                    
-                    if (titleElement) {
+                    try {
+                        const titleElement = event.querySelector('.event-title a, h2 a, h3 a');
+                        if (!titleElement) continue;
+                        
                         const title = titleElement.textContent.trim();
                         const url = `${source.baseUrl}${titleElement.getAttribute('href')}`;
-                        const dateText = dateElement ? dateElement.textContent.trim() : '';
-                        const location = locationElement ? locationElement.textContent.trim() : 'St. Kitts';
-                        const description = descriptionElement ? descriptionElement.textContent.trim() : '';
-                        const imageUrl = imageElement ? imageElement.getAttribute('src') : source.image;
-                        const ticketUrl = ticketLinkElement ? ticketLinkElement.getAttribute('href') : '';
                         
-                        // Parse date (this is a simple example, you might need to adjust based on actual date format)
+                        // More flexible selectors for other elements
+                        const dateElement = event.querySelector('.event-date, .date, .event-meta');
+                        const locationElement = event.querySelector('.event-location, .venue, .location');
+                        const descriptionElement = event.querySelector('.event-description, .description, .excerpt');
+                        const imageElement = event.querySelector('.event-image img, img');
+                        const ticketLinkElement = event.querySelector('.event-tickets a, .tickets a, .btn-tickets');
+                        
+                        const dateText = dateElement?.textContent.trim() || '';
+                        const location = locationElement?.textContent.trim() || 'St. Kitts';
+                        const description = descriptionElement?.textContent.trim() || '';
+                        const imageUrl = imageElement?.getAttribute('src') || source.image;
+                        const ticketUrl = ticketLinkElement?.getAttribute('href') || '';
+                        
+                        // Parse date with multiple format support
                         let eventDate = new Date();
                         if (dateText) {
-                            // Try to extract date parts (this is a simplified approach)
-                            const dateMatch = dateText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/);
+                            // Try multiple date formats
+                            const dateMatch = dateText.match(/(\d{1,2})[\/\-](\d{1,2})[\/\-](\d{4})/) || 
+                                             dateText.match(/(\w+) (\d{1,2}), (\d{4})/) ||
+                                             dateText.match(/(\w+) (\d{1,2}) - (\d{1,2}), (\d{4})/);
                             if (dateMatch) {
-                                eventDate = new Date(`${dateMatch[3]}-${dateMatch[2]}-${dateMatch[1]}`);
+                                eventDate = new Date(dateMatch[3], dateMatch[2] - 1, dateMatch[1]);
                             }
-                        }
-                        
-                        // Fetch event details to get more information
-                        let eventDetails = {};
-                        try {
-                            const eventResponse = await fetch(`${proxyUrl}${encodeURIComponent(url)}`);
-                            if (eventResponse.ok) {
-                                const eventData = await eventResponse.json();
-                                const eventParser = new DOMParser();
-                                const eventHtml = eventParser.parseFromString(eventData.contents, "text/html");
-                                
-                                // Extract additional details
-                                const detailsElement = eventHtml.querySelector('.event-content');
-                                const directionsElement = eventHtml.querySelector('.event-venue-info');
-                                const ticketInfoElement = eventHtml.querySelector('.ticket-prices');
-                                
-                                eventDetails = {
-                                    details: detailsElement ? detailsElement.innerHTML : description,
-                                    directions: directionsElement ? directionsElement.innerHTML : '',
-                                    ticketInfo: ticketInfoElement ? ticketInfoElement.innerHTML : '',
-                                    fullImageUrl: eventHtml.querySelector('.event-header-image img')?.getAttribute('src') || imageUrl
-                                };
-                            }
-                        } catch (error) {
-                            console.error("Error fetching event details:", error);
                         }
                         
                         events.push({
@@ -2148,22 +2141,117 @@
                             date: eventDate.toISOString(),
                             description,
                             location,
-                            imageUrl: eventDetails.fullImageUrl ? `${source.baseUrl}${eventDetails.fullImageUrl}` : (imageUrl ? `${source.baseUrl}${imageUrl}` : source.image),
+                            imageUrl: imageUrl.startsWith('http') ? imageUrl : `${source.baseUrl}${imageUrl}`,
                             ticketUrl,
-                            details: eventDetails.details,
-                            directions: eventDetails.directions,
-                            ticketInfo: eventDetails.ticketInfo,
                             type: 'event'
                         });
+                        
+                    } catch (error) {
+                        console.error(`Error processing event ${i}:`, error);
                     }
                 }
                 
                 return events;
+                
             } catch (error) {
                 console.error("Error scraping St. Kitts Music Festival:", error);
+                eventsDebug.textContent += ` Error: ${error.message}`;
                 return [];
             }
         }
+
+        // ===== ENHANCED LOAD EVENTS FUNCTION =====
+        async function loadEvents() {
+            console.log("Loading events data...");
+            refreshEvents.classList.add('loading');
+            eventsFeed.innerHTML = '<div class="loading-news">Loading events...</div>';
+            eventsDebug.textContent = 'Starting event load...';
+            
+            try {
+                const allEvents = [];
+                eventsDebug.textContent += '\nChecking event sources...';
+                
+                // Load from each event source in parallel
+                await Promise.all(EVENT_SOURCES.map(async (source) => {
+                    try {
+                        console.log(`Loading events from ${source.name}...`);
+                        eventsDebug.textContent += `\nLoading ${source.name}...`;
+                        
+                        let events = [];
+                        if (source.type === "scrape" && source.scrapeFunction) {
+                            events = await source.scrapeFunction(source);
+                            console.log(`Found ${events.length} events from ${source.name}`);
+                            eventsDebug.textContent += ` Found ${events.length} events.`;
+                        }
+                        
+                        allEvents.push(...events);
+                    } catch (error) {
+                        console.error(`Error loading ${source.name}:`, error);
+                        eventsDebug.textContent += ` ${source.name} error: ${error.message}`;
+                    }
+                }));
+                
+                console.log("Total events found:", allEvents.length);
+                eventsDebug.textContent += `\nTotal events found: ${allEvents.length}`;
+                
+                // Sort by date and limit to 10 upcoming events
+                const now = new Date();
+                const upcomingEvents = allEvents
+                    .filter(event => new Date(event.date) >= now)
+                    .sort((a, b) => new Date(a.date) - new Date(b.date))
+                    .slice(0, 10);
+                
+                if (upcomingEvents.length > 0) {
+                    console.log("Displaying events:", upcomingEvents);
+                    eventsDebug.textContent += `\nDisplaying ${upcomingEvents.length} upcoming events.`;
+                    displayEvents(upcomingEvents);
+                } else {
+                    console.log("No upcoming events found, trying Firestore fallback...");
+                    eventsDebug.textContent += '\nNo upcoming events found, checking Firestore...';
+                    
+                    // Fallback to Firestore if no events found
+                    const querySnapshot = await db.collection("events")
+                        .where("date", ">=", now.toISOString())
+                        .orderBy("date")
+                        .limit(10)
+                        .get();
+                    
+                    if (!querySnapshot.empty) {
+                        console.log("Found events in Firestore");
+                        eventsDebug.textContent += `\nFound ${querySnapshot.size} events in Firestore.`;
+                        displayEventsFromFirestore(querySnapshot);
+                    } else {
+                        console.log("No events found in Firestore either");
+                        eventsDebug.textContent += '\nNo events found in any source.';
+                        eventsFeed.innerHTML = `
+                            <div class="error-news">
+                                <p>No upcoming events found. Please check back later.</p>
+                                <button onclick="loadEvents()" class="btn btn-primary">Try Again</button>
+                            </div>
+                        `;
+                    }
+                }
+                
+            } catch (error) {
+                console.error("Error loading events:", error);
+                eventsDebug.textContent += `\nGlobal error: ${error.message}`;
+                eventsFeed.innerHTML = `
+                    <div class="error-news">
+                        <p>Error loading events. Please try refreshing.</p>
+                        <button onclick="loadEvents()" class="btn btn-primary">Retry</button>
+                    </div>
+                `;
+            } finally {
+                refreshEvents.classList.remove('loading');
+                console.log("Event loading complete");
+            }
+        }
+
+        // ===== REFRESH EVENTS BUTTON =====
+        refreshEvents.addEventListener('click', (e) => {
+            e.preventDefault();
+            loadEvents();
+        });
 
         // ===== SHOW EVENT DETAIL =====
         function showEventDetail(event) {
@@ -2720,53 +2808,6 @@
             }
         }
 
-        // ===== LOAD EVENTS =====
-        async function loadEvents() {
-            console.log("Loading events data...");
-            eventsFeed.innerHTML = '<div class="loading-news">Loading events...</div>';
-            
-            try {
-                const allEvents = [];
-                
-                // Load from each event source in parallel
-                await Promise.all(EVENT_SOURCES.map(async (source) => {
-                    try {
-                        let events = [];
-                        
-                        if (source.type === "scrape" && source.scrapeFunction) {
-                            events = await source.scrapeFunction(source);
-                        }
-                        
-                        allEvents.push(...events);
-                    } catch (error) {
-                        console.error(`Error loading ${source.name}:`, error);
-                    }
-                }));
-                
-                // Sort by date and limit to 10 events
-                const sortedEvents = allEvents
-                    .sort((a, b) => new Date(a.date) - new Date(b.date))
-                    .slice(0, 10);
-                
-                if (sortedEvents.length > 0) {
-                    displayEvents(sortedEvents);
-                } else {
-                    // Fallback to Firestore if no events found
-                    const querySnapshot = await db.collection("events").orderBy("date").limit(10).get();
-                    
-                    if (!querySnapshot.empty) {
-                        displayEventsFromFirestore(querySnapshot);
-                    } else {
-                        eventsFeed.innerHTML = '<p>No upcoming events found. Please check back later.</p>';
-                    }
-                }
-                
-            } catch (error) {
-                console.error("Error loading events:", error);
-                eventsFeed.innerHTML = '<p>Error loading events. Please try again later.</p>';
-            }
-        }
-
         function displayEventsFromFirestore(querySnapshot) {
             eventsFeed.innerHTML = '';
             
@@ -2775,7 +2816,7 @@
                 const eventDate = new Date(event.date);
                 
                 eventsFeed.innerHTML += `
-                    <div class="event-card">
+                    <div class="event-card" onclick="showEventDetail(${JSON.stringify(event).replace(/"/g, '&quot;')})">
                         <div class="event-date">
                             <div class="event-day">${eventDate.getDate()}</div>
                             <div class="event-month">${eventDate.toLocaleString('default', { month: 'short' })}</div>
@@ -2784,6 +2825,21 @@
                             <div class="event-title">${event.title}</div>
                             <div class="event-location"><i class="fas fa-map-marker-alt"></i> ${event.location}</div>
                             <div class="event-detail">${event.description}</div>
+                            ${event.imageUrl ? `<img src="${event.imageUrl}" class="event-image" alt="${event.title}" onerror="this.style.display='none'">` : ''}
+                            <div class="event-info">
+                                ${event.ticketUrl ? `
+                                    <div class="event-info-item">
+                                        <i class="fas fa-ticket-alt"></i>
+                                        <a href="${event.ticketUrl}" target="_blank" class="ticket-btn">Get Tickets</a>
+                                    </div>
+                                ` : ''}
+                                ${event.url ? `
+                                    <div class="event-info-item">
+                                        <i class="fas fa-info-circle"></i>
+                                        <a href="${event.url}" target="_blank">More Info</a>
+                                    </div>
+                                ` : ''}
+                            </div>
                         </div>
                     </div>
                 `;
@@ -3028,6 +3084,13 @@
         document.addEventListener('DOMContentLoaded', () => {
             console.log("Page loaded");
             showSection('home');
+            
+            // Test event loading
+            setTimeout(() => {
+                if (window.location.hash === '#test-events') {
+                    showSection('events');
+                }
+            }, 1000);
         });
     </script>
 </body>
